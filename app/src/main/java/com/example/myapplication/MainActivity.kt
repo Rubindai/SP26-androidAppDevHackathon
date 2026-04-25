@@ -11,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -50,7 +51,7 @@ class MainActivity : ComponentActivity() {
                 ),
                 NavItem(
                     label = "Profile",
-                    icon = Icons.Filled.Person,
+                    icon = Icons.Default.Search,
                     screen = Screen.ProfileScreen(userId = "123"),
                 )
             )

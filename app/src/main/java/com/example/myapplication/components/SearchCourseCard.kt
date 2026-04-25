@@ -4,12 +4,19 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -105,15 +112,14 @@ fun SearchCourseCard(course: courseInformation) {
                 )
             }
 
-            // middle info
+            // info
 
             Column(
                 modifier = Modifier
                     .padding(start = 16.dp)
             ) {
                 Row(
-                    modifier = Modifier
-                        .padding(bottom = 5.dp)
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         text = "${course.department} ${course.courseNumber} | ${course.credits} cr",
@@ -142,17 +148,34 @@ fun SearchCourseCard(course: courseInformation) {
                         )
                     }
                 }
+
                 Text(
                     text = course.name,
                     fontFamily = Fraunces,
                     fontWeight = FontWeight(500),
-                    fontSize = 20.sp
+                    fontSize = 20.sp,
+                    modifier = Modifier
+                        .padding(top = 5.dp, bottom = 5.dp)
                 )
 
                 // times and prof
                 Row(
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
+                    Icon(
+                        imageVector = Icons.Default.AccessTime,
+                        contentDescription = "Class Time",
+                        modifier = Modifier
+                            .size(18.dp)
+                            .padding(end = 5.dp),
+                        tint = Color(0xFF6C665C),
 
+                    )
+
+                    Text(
+                        text = "${course.days} ${course.time}",
+                        color = Color.DarkGray
+                    )
                 }
 
             }
