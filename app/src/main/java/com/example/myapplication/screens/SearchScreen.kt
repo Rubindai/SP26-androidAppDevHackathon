@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -16,11 +17,9 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
@@ -28,14 +27,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.components.FilterDropdown
 import com.example.myapplication.components.SearchCourseCard
 import com.example.myapplication.ui.theme.Fraunces
+import com.example.myapplication.viewmodel.SearchViewModel
+
 
 @Composable
-fun SearchScreen() {
+fun SearchScreen(viewModel: SearchViewModel = viewModel()) { // import viewmodel in
 
-    var searchBarText by remember { mutableStateOf("") }
+    val searchBarText by viewModel.searchingText.collectAsState() // what is being typed into it
+    val filteredCourses by viewModel.filteredCourses.collectAsState() // filtered courses
 
     Column(
         modifier = Modifier
@@ -66,7 +69,7 @@ fun SearchScreen() {
         // 2. Search Bar
         OutlinedTextField(
             value = searchBarText,
-            onValueChange = { searchBarText = it },
+            onValueChange = { viewModel.onSearchQueryChanged(it) },
             placeholder = { Text("Search courses, depts, professors...") },
             leadingIcon = {
                 Icon(Icons.Default.Search, contentDescription = null)
@@ -108,8 +111,8 @@ fun SearchScreen() {
         }
 
         LazyColumn() {
-            item {
-                SearchCourseCard(course = com.example.myapplication.components.mockCourse)
+            items(filteredCourses) { course ->
+                SearchCourseCard(course = course)
             }
         }
 

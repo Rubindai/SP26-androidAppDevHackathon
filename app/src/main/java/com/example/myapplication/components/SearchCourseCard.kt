@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.ui.theme.Fraunces
+import com.example.myapplication.viewmodel.mockCourses
 
 data class courseInformation(
     val name: String,
@@ -49,24 +50,6 @@ data class courseInformation(
     val time: String,
     val location: String,
     val open: Boolean
-)
-
-val mockCourse = courseInformation(
-    name = "Intermediate Design & Programming for the Web",
-    department = "INFO",
-    courseNumber = "2300",
-    credits = 4,
-    description = "Web design and programming.",
-    prerequisites = listOf("INFO 1300"),
-    corequisites = emptyList(),
-    distributions = listOf("ALC-AS", "SBA-AS"),
-    year = 2026,
-    semester = "Spring",
-    instructor = "D. Schneider",
-    days = "MWF",
-    time = "10:10 AM - 11:00 AM",
-    location = "Rhodes Hall 121",
-    open = true
 )
 
 @Composable
@@ -89,6 +72,7 @@ fun AddCourseButton(onClick: () -> Unit) {
         )
     }
 }
+
 
 @Composable
 fun SearchCourseCard(course: courseInformation) {
@@ -235,5 +219,5 @@ fun SearchCourseCard(course: courseInformation) {
 @Preview
 @Composable
 private fun SearchCourseCardPreview() {
-    SearchCourseCard(course = mockCourse)
+    SearchCourseCard(course = mockCourses[0])
 }
