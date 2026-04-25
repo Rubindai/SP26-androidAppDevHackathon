@@ -85,7 +85,7 @@ fun SearchScreen() {
 
         LazyRow(modifier = Modifier.padding(vertical = 8.dp)) {
             item {
-                FilterDropdown("Distributions", listOf("ALC-AS"))
+                FilterDropdown("Distributions", listOf("Any", "ALC-AS"))
             }
             item {
                 FilterDropdown("Subject", listOf("Any", "there", "are", "too", "many",
@@ -93,16 +93,17 @@ fun SearchScreen() {
                     "subjects"))
             }
             item {
-                FilterDropdown("Credits", listOf("1", "2", "3", "4+"))
+                FilterDropdown("Credits", listOf("Any", "1", "2", "3", "4+"))
             }
             item {
                 FilterDropdown("Level", listOf("Any", "1000s", "2000s", "3000+"))
             }
             item {
-                FilterDropdown("Days", listOf("M/W/F", "Tu/Th"))
+                FilterDropdown("Days", listOf("Any", "M/W/F", "Tu/Th"))
             }
             item {
-                FilterDropdown("When", listOf("Mornings", "Afternoons", "Evenings"))
+                // need to change list
+                FilterDropdown("When", listOf("Any", "Mornings", "Afternoons", "Evenings"))
             }
         }
 

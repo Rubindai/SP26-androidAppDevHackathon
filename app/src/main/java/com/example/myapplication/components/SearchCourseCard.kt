@@ -119,7 +119,8 @@ fun SearchCourseCard(course: courseInformation) {
                         text = "${course.department} ${course.courseNumber} | ${course.credits} cr",
                         fontFamily = FontFamily.Monospace,
                         color = Color.Gray,
-                        fontWeight = FontWeight(600)
+                        fontWeight = FontWeight(600),
+                        fontSize = 12.sp
                     )
 
                     Box(
@@ -136,7 +137,8 @@ fun SearchCourseCard(course: courseInformation) {
                             text = openOrClosed,
                             fontFamily = FontFamily.Monospace,
                             color = colorTag,
-                            fontWeight = FontWeight(600)
+                            fontWeight = FontWeight(600),
+                            fontSize = 12.sp
                         )
                     }
                 }
@@ -144,7 +146,7 @@ fun SearchCourseCard(course: courseInformation) {
                     text = course.name,
                     fontFamily = Fraunces,
                     fontWeight = FontWeight(500),
-                    fontSize = 24.sp
+                    fontSize = 20.sp
                 )
 
                 // times and prof
