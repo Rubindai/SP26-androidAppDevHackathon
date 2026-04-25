@@ -4,29 +4,90 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.example.myapplication.model.NavItem
+import com.example.myapplication.screens.Screen
+import com.example.myapplication.screens.Screen.DashboardScreen.toScreen
 import com.example.myapplication.ui.theme.MyApplicationTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContent {
+            val tabs = listOf(
+                NavItem(
+                    label = "Dashboard",
+                    icon = Icons.Filled.Home,
+                    screen = Screen.DashboardScreen,
+                ),
+                NavItem(
+                    label = "Search",
+                    icon = Icons.Filled.Settings,
+                    screen = Screen.SearchScreen,
+                ),
+                NavItem(
+                    label = "Profile",
+                    icon = Icons.Filled.Person,
+                    screen = Screen.ProfileScreen(userId = "123"),
+                )
+            )
+
             MyApplicationTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                val navController = rememberNavController()
+                val navBackStackEntry = navController.currentBackStackEntryAsState().value
+
+                Scaffold(modifier = Modifier.fillMaxSize(), bottomBar = {
+                    NavigationBar {
+                        tabs.map { item ->
+                            NavigationBarItem(
+                                selected = item.screen == navBackStackEntry?.toScreen(),
+                                onClick = { navController.navigate(item.screen) },
+                                icon = { Icon(imageVector = item.icon, contentDescription = null) },
+                                label = { Text(text = item.label) }
+                            )
+                        }
+                    }
+                }) { innerPadding ->
+                    Box(modifier = Modifier.padding(innerPadding)) {
+                        NavHost(
+                            navController = navController,
+                            startDestination = Screen.DashboardScreen
+                        ) {
+                            composable<Screen.DashboardScreen> {
+                                Text(text = "HOME: add your screen here")
+                            }
+                            composable<Screen.SearchScreen> {
+                                Text(text = "SETTINGS: add your screen here")
+                            }
+                            composable<Screen.ProfileScreen> {
+                                Text(text = "PROFILE: add your screen here")
+                            }
+                        }
+                    }
                 }
             }
         }
+
     }
 }
 
