@@ -84,6 +84,7 @@ fun SearchScreen() {
         LazyRow(modifier = Modifier.padding(vertical = 8.dp)) {
             item {
                 FilterDropdown("Subject", listOf("Any", "there", "are", "too", "many",
+                    "subjects", "there", "are", "too", "many",
                     "subjects"))
             }
             item {
