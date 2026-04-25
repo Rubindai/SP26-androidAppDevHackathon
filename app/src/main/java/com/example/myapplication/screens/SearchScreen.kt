@@ -7,11 +7,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.components.FilterDropdown
+import com.example.myapplication.components.SearchCourseCard
 import com.example.myapplication.ui.theme.Fraunces
 
 @Composable
@@ -53,13 +54,14 @@ fun SearchScreen() {
             modifier = Modifier
                 .padding(top = 5.dp, bottom = 10.dp)
         ) {
-            Text(
-                text = "NEED",
-                fontFamily = FontFamily.SansSerif,
-                fontWeight = FontWeight(600),
-                color = Color(0xFF6C665C),
-            )
+//            Text(
+//                text = "NEED",
+//                fontFamily = FontFamily.SansSerif,
+//                fontWeight = FontWeight(600),
+//                color = Color(0xFF6C665C),
+//            )
         }
+
 
         // 2. Search Bar
         OutlinedTextField(
@@ -83,6 +85,9 @@ fun SearchScreen() {
 
         LazyRow(modifier = Modifier.padding(vertical = 8.dp)) {
             item {
+                FilterDropdown("Distributions", listOf("ALC-AS"))
+            }
+            item {
                 FilterDropdown("Subject", listOf("Any", "there", "are", "too", "many",
                     "subjects", "there", "are", "too", "many",
                     "subjects"))
@@ -100,7 +105,13 @@ fun SearchScreen() {
                 FilterDropdown("When", listOf("Mornings", "Afternoons", "Evenings"))
             }
         }
-        
+
+        LazyColumn() {
+            item {
+                SearchCourseCard(course = com.example.myapplication.components.mockCourse)
+            }
+        }
+
     }
 }
 
