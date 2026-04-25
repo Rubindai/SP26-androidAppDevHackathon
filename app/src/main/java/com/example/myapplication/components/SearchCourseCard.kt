@@ -9,14 +9,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -64,6 +68,27 @@ val mockCourse = courseInformation(
     location = "Rhodes Hall 121",
     open = true
 )
+
+@Composable
+fun AddCourseButton(onClick: () -> Unit) {
+    IconButton(
+        onClick = onClick,
+        modifier = Modifier
+            .size(40.dp)
+            .background(
+                color = Color(0xFF8B1818),
+                shape = RoundedCornerShape(16.dp)
+            )
+            .padding(start = 5.dp, end = 5.dp)
+    ) {
+        Icon(
+            imageVector = Icons.Default.Add,
+            contentDescription = "Add Course",
+            tint = Color.White,
+            modifier = Modifier.size(24.dp)
+        )
+    }
+}
 
 @Composable
 fun SearchCourseCard(course: courseInformation) {
@@ -117,6 +142,7 @@ fun SearchCourseCard(course: courseInformation) {
             Column(
                 modifier = Modifier
                     .padding(start = 16.dp)
+                    .weight(1f) // how much remaining space to use
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically
@@ -158,7 +184,7 @@ fun SearchCourseCard(course: courseInformation) {
                         .padding(top = 5.dp, bottom = 5.dp)
                 )
 
-                // times and prof
+                // date and time
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -169,7 +195,6 @@ fun SearchCourseCard(course: courseInformation) {
                             .size(18.dp)
                             .padding(end = 5.dp),
                         tint = Color(0xFF6C665C),
-
                     )
 
                     Text(
@@ -177,9 +202,32 @@ fun SearchCourseCard(course: courseInformation) {
                         color = Color.DarkGray
                     )
                 }
+                // prof
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Person,
+                        contentDescription = "Class Time",
+                        modifier = Modifier
+                            .size(18.dp)
+                            .padding(end = 5.dp),
+                        tint = Color(0xFF6C665C),
+                    )
+
+                    Text(
+                        text = course.instructor,
+                        color = Color.DarkGray
+                    )
+                }
 
             }
+            // add button
+            AddCourseButton(onClick = {
+                // viewmodel logic goes here
+            })
         }
+
     }
 }
 

@@ -46,12 +46,12 @@ class MainActivity : ComponentActivity() {
                 ),
                 NavItem(
                     label = "Search",
-                    icon = Icons.Filled.Add,
+                    icon = Icons.Default.Search,
                     screen = Screen.SearchScreen,
                 ),
                 NavItem(
                     label = "Profile",
-                    icon = Icons.Default.Search,
+                    icon = Icons.Filled.Person,
                     screen = Screen.ProfileScreen(userId = "123"),
                 )
             )
