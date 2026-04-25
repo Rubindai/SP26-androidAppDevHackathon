@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
@@ -24,10 +25,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.model.NavItem
+import com.example.myapplication.screens.DashboardScreen
+import com.example.myapplication.screens.ProfileScreen
 import com.example.myapplication.screens.Screen
 import com.example.myapplication.screens.Screen.DashboardScreen.toScreen
+import com.example.myapplication.screens.SearchScreen
 import com.example.myapplication.ui.theme.MyApplicationTheme
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +45,7 @@ class MainActivity : ComponentActivity() {
                 ),
                 NavItem(
                     label = "Search",
-                    icon = Icons.Filled.Settings,
+                    icon = Icons.Filled.Add,
                     screen = Screen.SearchScreen,
                 ),
                 NavItem(
@@ -74,13 +77,13 @@ class MainActivity : ComponentActivity() {
                             startDestination = Screen.DashboardScreen
                         ) {
                             composable<Screen.DashboardScreen> {
-                                Text(text = "HOME: add your screen here")
+                                DashboardScreen()
                             }
                             composable<Screen.SearchScreen> {
-                                Text(text = "SETTINGS: add your screen here")
+                                SearchScreen()
                             }
                             composable<Screen.ProfileScreen> {
-                                Text(text = "PROFILE: add your screen here")
+                                ProfileScreen()
                             }
                         }
                     }
