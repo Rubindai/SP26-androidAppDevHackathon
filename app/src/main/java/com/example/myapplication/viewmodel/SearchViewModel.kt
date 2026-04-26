@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-// In com.example.myapplication.components or a separate Data file
 val mockCourses = listOf(
     courseInformation(
         name = "Intermediate Design & Programming for the Web",
@@ -40,7 +39,7 @@ val mockCourses = listOf(
         days = "TR",
         time = "11:40 AM",
         location = "Uris Hall",
-        open = false // Testing "Closed" status
+        open = false // testing "Closed"
     )
 )
 
@@ -50,9 +49,13 @@ class SearchViewModel: ViewModel() {
 
     private val _searchingText = MutableStateFlow("") // the text the user types into the search bar
 
+    // this is for the dropdown filters
+    // Using Map<String, String> like this: "Credits" -> "4", "Distributions" -> "HA-AS"
+    private val _selectedFilters = MutableStateFlow<Map<String, String>>(emptyMap())
+
+    val selectedFilters = _selectedFilters.asStateFlow()
     val searchingText: StateFlow<String> = _searchingText.asStateFlow()
 
-    // The list that the UI observes
     private val _filteredCourses = MutableStateFlow(allCourses)
     val filteredCourses: StateFlow<List<courseInformation>> = _filteredCourses.asStateFlow()
 
@@ -61,16 +64,109 @@ class SearchViewModel: ViewModel() {
         filterCourses(newQuery)
     }
 
-    private fun filterCourses(query: String) {
-        if (query.isEmpty()) {
-            _filteredCourses.value = allCourses
-        } else {
-            _filteredCourses.value = allCourses.filter { course ->
-                course.name.contains(query, ignoreCase = true) || // name
-                        course.department.contains(query, ignoreCase = true) || // department
-                        course.courseNumber.contains(query, ignoreCase = true) // course number
-                // add more here
+    fun dropdownFilter(category: String, option: String) {
+        // get all selections
+        val currentlySelected = _selectedFilters.value.toMutableMap() // this makes the selections editable
+
+        if (currentlySelected[category] == option) { // this will mirror the logic of the prototype
+            currentlySelected.remove(category) // where if the user clicks on the same option
+        } else {                                     // twice, it will be removed
+            currentlySelected[category] = option
+        }
+
+        _selectedFilters.value = currentlySelected // save selections
+        filterCourses(searchingText.value) // update the list of courses based on the selections
+    }
+
+    private fun filterCourses(searchBarText: String) {
+        val filters = _selectedFilters.value // get filters
+
+        _filteredCourses.value = allCourses.filter { course ->
+            // search bar logic
+            var matchesSearch = false
+            if (searchBarText.isEmpty()) {
+                matchesSearch = true
+            } else {
+                course.name.contains(searchBarText, ignoreCase = true)
+                        || course.department.contains(searchBarText, ignoreCase = true)
+                        || course.courseNumber.contains(searchBarText, ignoreCase = true)
+                        || course.instructor.contains(searchBarText, ignoreCase = true)
             }
+
+            // dropdown logic
+            var matchesDist = false
+            if (filters.containsKey("Distributions")) {
+                matchesDist = course.distributions.contains(filters["Distributions"])
+            } else {
+                matchesDist = true
+            }
+
+            var matchesCredits = false
+
+            if (filters.containsKey("Credits")) {
+                matchesCredits = (course.credits.toString() == filters["Credits"])
+            } else {
+                matchesCredits = true
+            }
+
+            var matchesLevels = false
+            if (filters.containsKey("Level")) {
+                val selected = filters["Level"]
+                if (selected == "1000s") {
+                    matchesLevels = course.courseNumber.startsWith("1")
+                } else if (selected == "2000s") {
+                    matchesLevels = course.courseNumber.startsWith("2")
+                } else if (selected == "3000s") {
+                    matchesLevels = course.courseNumber.startsWith("3")
+                } else if (selected == "4000+") {
+                    matchesLevels = course.courseNumber.first().digitToInt() >= 4
+                } else {
+                    matchesLevels = true
+                }
+            } else {
+                matchesLevels = true
+            }
+
+            var matchesSubject = false
+            if (filters.containsKey("Subject")) {
+                matchesSubject = (course.department == filters["Subject"])
+            } else {
+                matchesSubject = true
+            }
+
+            var matchesDays = false
+            if (filters.containsKey("Days")) {
+                val selected = filters["Days"]
+                if (selected == "M/W/F") {
+                    matchesDays = course.days.contains("M")
+                            || course.days.contains("W")
+                            || course.days.contains("F")
+                } else if (selected == "Tu/Th") {
+                    matchesDays = course.days.contains("T")  // Assuming T is Tue and R is Thur
+                            || course.days.contains("R")
+                } else {
+                    matchesDays = true
+                }
+            } else {
+                matchesDays = true
+            }
+
+            var matchesTime = false
+            if (filters.containsKey("Time")) {
+                val selected = filters["Time"]
+                if (selected == "8AM - 11:59AM") {
+                    matchesTime = course.time.contains("AM") // idk how the time will be denoted
+                } else if (selected == "12PM - 4:59PM" || selected == "5PM - 11:59PM") {
+                    matchesTime = course.time.contains("PM")
+                } else {
+                    matchesTime = true
+                }
+            } else {
+                matchesTime = true
+            }
+
+            matchesSearch && matchesDist && matchesCredits && matchesSubject && matchesDays
+                    && matchesTime && matchesLevels
         }
     }
 }

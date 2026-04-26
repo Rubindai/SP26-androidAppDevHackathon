@@ -39,6 +39,7 @@ fun SearchScreen(viewModel: SearchViewModel = viewModel()) { // import viewmodel
 
     val searchBarText by viewModel.searchingText.collectAsState() // what is being typed into it
     val filteredCourses by viewModel.filteredCourses.collectAsState() // filtered courses
+    val selectedFilters by viewModel.selectedFilters.collectAsState() // get dropdown filters
 
     Column(
         modifier = Modifier
@@ -65,7 +66,6 @@ fun SearchScreen(viewModel: SearchViewModel = viewModel()) { // import viewmodel
 //            )
         }
 
-
         // 2. Search Bar
         OutlinedTextField(
             value = searchBarText,
@@ -88,25 +88,52 @@ fun SearchScreen(viewModel: SearchViewModel = viewModel()) { // import viewmodel
 
         LazyRow(modifier = Modifier.padding(vertical = 8.dp)) {
             item {
-                FilterDropdown("Distributions", listOf("Any", "ALC-AS"))
+                FilterDropdown(
+                    label = "Distributions",
+                    options = listOf("ALC-AS", "SBA-AS", "HA-AS"),
+                    selectedOption = selectedFilters["Distributions"], // current selection
+                    onOptionSelected = { viewModel.dropdownFilter("Distributions", it) }
+                )
             }
             item {
-                FilterDropdown("Subject", listOf("Any", "there", "are", "too", "many",
-                    "subjects", "there", "are", "too", "many",
-                    "subjects"))
+                FilterDropdown(
+                    label = "Subject",
+                    options = listOf("INFO", "HIST", "CS"),
+                    selectedOption = selectedFilters["Subject"],
+                    onOptionSelected = { viewModel.dropdownFilter("Subject", it) }
+                )
             }
             item {
-                FilterDropdown("Credits", listOf("Any", "1", "2", "3", "4+"))
+                FilterDropdown(
+                    label = "Credits",
+                    options = listOf("1", "2", "3", "4+"), // TODO: Fix
+                    selectedOption = selectedFilters["Credits"],
+                    onOptionSelected = { viewModel.dropdownFilter("Credits", it) }
+                )
             }
             item {
-                FilterDropdown("Level", listOf("Any", "1000s", "2000s", "3000+"))
+                FilterDropdown(
+                    label = "Level",
+                    options = listOf("1000s", "2000s", "3000s", "4000+"), // TODO: Fix
+                    selectedOption = selectedFilters["Level"],
+                    onOptionSelected = { viewModel.dropdownFilter("Level", it) }
+                )
             }
             item {
-                FilterDropdown("Days", listOf("Any", "M/W/F", "Tu/Th"))
+                FilterDropdown(
+                    label = "Days",
+                    options = listOf("M/W/F", "Tu/Th"), // TODO: Fix
+                    selectedOption = selectedFilters["Days"],
+                    onOptionSelected = { viewModel.dropdownFilter("Days", it) }
+                )
             }
             item {
-                // need to change list
-                FilterDropdown("When", listOf("Any", "Mornings", "Afternoons", "Evenings"))
+                FilterDropdown(
+                    label = "Time",
+                    options = listOf("8AM - 11:59AM", "12PM - 4:59PM", "5PM - 11:59PM"), // TODO: Fix
+                    selectedOption = selectedFilters["Time"],
+                    onOptionSelected = { viewModel.dropdownFilter("Time", it) }
+                )
             }
         }
 

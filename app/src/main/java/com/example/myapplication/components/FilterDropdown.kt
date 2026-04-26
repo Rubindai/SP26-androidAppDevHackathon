@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.DropdownMenu
@@ -27,21 +28,32 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun FilterDropdown(
     label: String,
-    options: List<String>
+    options: List<String>,
+    selectedOption: String?,
+    onOptionSelected: (String) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedOption by remember { mutableStateOf("") }
 
     Box(modifier = Modifier.padding(end = 8.dp)) {
         FilterChip(
-            selected = selectedOption.isNotEmpty(),
-            onClick = { expanded = !expanded },
+            selected = selectedOption != null,
+            onClick = {
+                if (selectedOption != null) { // if something is selected already
+                    // the first click clears it
+                    onOptionSelected(selectedOption)
+                } else { // if nothing is selected
+                    expanded = !expanded // show everything
+                }
+            },
             label = {
-                Text(if (selectedOption.isEmpty()) label else selectedOption)
+                Text(selectedOption ?: label)
             },
             trailingIcon = {
+                // if it's selected, show an 'X'
                 Icon(
-                    imageVector = if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                    imageVector = if (selectedOption != null) Icons.Default.Close
+                    else if (expanded) Icons.Default.KeyboardArrowUp
+                    else Icons.Default.KeyboardArrowDown,
                     contentDescription = null,
                     modifier = Modifier.size(18.dp)
                 )
@@ -52,17 +64,14 @@ fun FilterDropdown(
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            modifier = Modifier
-                .background(Color.White)
-                .heightIn(max = 280.dp)
+            modifier = Modifier.background(Color.White).heightIn(max = 280.dp)
         ) {
             options.forEach { option ->
                 DropdownMenuItem(
                     text = { Text(option) },
                     onClick = {
-                        selectedOption = option
+                        onOptionSelected(option)
                         expanded = false
-                        // TODO: Trigger filter logic here (ViewModel's)
                     }
                 )
             }
@@ -70,9 +79,13 @@ fun FilterDropdown(
     }
 }
 
-
 @Preview
 @Composable
 private fun FilterDropdownPreview() {
-    FilterDropdown("Credits", listOf("1", "2", "3", "4+"))
+    FilterDropdown(
+        label = "Credits",
+        options = listOf("1", "2", "3", "4+"),
+        selectedOption = "3",
+        onOptionSelected = {}
+    )
 }
