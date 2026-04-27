@@ -117,7 +117,7 @@ class SearchViewModel: ViewModel() {
             if (searchBarText.isEmpty()) {
                 matchesSearch = true
             } else {
-                course.name.contains(searchBarText, ignoreCase = true)
+                matchesSearch = course.name.contains(searchBarText, ignoreCase = true)
                         || course.department.contains(searchBarText, ignoreCase = true)
                         || course.courseNumber.contains(searchBarText, ignoreCase = true)
                         || course.instructor.contains(searchBarText, ignoreCase = true)
