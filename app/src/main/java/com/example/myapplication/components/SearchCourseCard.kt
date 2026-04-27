@@ -98,7 +98,6 @@ fun AddCourseButton(
     }
 }
 
-
 @Composable
 fun SearchCourseCard(
     course: courseInformation,

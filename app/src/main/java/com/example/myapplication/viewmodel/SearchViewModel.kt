@@ -46,7 +46,6 @@ val mockCourses = listOf(
 
 class SearchViewModel: ViewModel() {
     private val allCourses = mockCourses // we should get this from the backend
-
     private val _searchingText = MutableStateFlow("") // the text the user types into the search bar
 
     // this is for the dropdown filters
@@ -69,13 +68,13 @@ class SearchViewModel: ViewModel() {
     val addedCourses: StateFlow<Set<String>> = _addedCourses.asStateFlow()
 
     // the list of courses added to the schedule
-    private val _mySchedule = MutableStateFlow<List<courseInformation>>(emptyList())
-    val mySchedule: StateFlow<List<courseInformation>> = _mySchedule.asStateFlow()
+    private val _userSchedule = MutableStateFlow<List<courseInformation>>(emptyList())
+    val userSchedule: StateFlow<List<courseInformation>> = _userSchedule.asStateFlow()
 
     // adds or deletes a course from the user's data
     fun addOrDeleteCourse(course: courseInformation) {
         val currentAdded = _addedCourses.value.toMutableSet()
-        val currentSchedule = _mySchedule.value.toMutableList()
+        val currentSchedule = _userSchedule.value.toMutableList()
 
         // department + number (ex: "HIST1530")
         val courseId = "${course.department}${course.courseNumber}"
@@ -92,7 +91,7 @@ class SearchViewModel: ViewModel() {
 
         // update + tell UI about it
         _addedCourses.value = currentAdded
-        _mySchedule.value = currentSchedule
+        _userSchedule.value = currentSchedule
     }
 
     fun dropdownFilter(category: String, option: String) {
