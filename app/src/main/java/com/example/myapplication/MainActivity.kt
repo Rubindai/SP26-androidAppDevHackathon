@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -32,6 +33,8 @@ import com.example.myapplication.screens.Screen
 import com.example.myapplication.screens.Screen.DashboardScreen.toScreen
 import com.example.myapplication.screens.SearchScreen
 import com.example.myapplication.ui.theme.MyApplicationTheme
+import com.example.myapplication.viewmodel.SearchViewModel
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +62,7 @@ class MainActivity : ComponentActivity() {
             MyApplicationTheme {
                 val navController = rememberNavController()
                 val navBackStackEntry = navController.currentBackStackEntryAsState().value
+                val searchViewModel: SearchViewModel = viewModel()
 
                 Scaffold(modifier = Modifier.fillMaxSize(), bottomBar = {
                     NavigationBar {
@@ -81,7 +85,7 @@ class MainActivity : ComponentActivity() {
                                 DashboardScreen()
                             }
                             composable<Screen.SearchScreen> {
-                                SearchScreen()
+                                SearchScreen(viewModel = searchViewModel)
                             }
                             composable<Screen.ProfileScreen> {
                                 ProfileScreen()
