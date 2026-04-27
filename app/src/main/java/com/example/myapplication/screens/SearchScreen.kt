@@ -40,6 +40,8 @@ fun SearchScreen(viewModel: SearchViewModel = viewModel()) { // import viewmodel
     val searchBarText by viewModel.searchingText.collectAsState() // what is being typed into it
     val filteredCourses by viewModel.filteredCourses.collectAsState() // filtered courses
     val selectedFilters by viewModel.selectedFilters.collectAsState() // get dropdown filters
+    val addedCourses by viewModel.addedCourses.collectAsState() // get added courses
+
 
     Column(
         modifier = Modifier
@@ -106,7 +108,7 @@ fun SearchScreen(viewModel: SearchViewModel = viewModel()) { // import viewmodel
             item {
                 FilterDropdown(
                     label = "Credits",
-                    options = listOf("1", "2", "3", "4+"), // TODO: Fix
+                    options = listOf("1", "2", "3", "4+"),
                     selectedOption = selectedFilters["Credits"],
                     onOptionSelected = { viewModel.dropdownFilter("Credits", it) }
                 )
@@ -114,7 +116,7 @@ fun SearchScreen(viewModel: SearchViewModel = viewModel()) { // import viewmodel
             item {
                 FilterDropdown(
                     label = "Level",
-                    options = listOf("1000s", "2000s", "3000s", "4000+"), // TODO: Fix
+                    options = listOf("1000s", "2000s", "3000s", "4000+"),
                     selectedOption = selectedFilters["Level"],
                     onOptionSelected = { viewModel.dropdownFilter("Level", it) }
                 )
@@ -122,7 +124,7 @@ fun SearchScreen(viewModel: SearchViewModel = viewModel()) { // import viewmodel
             item {
                 FilterDropdown(
                     label = "Days",
-                    options = listOf("M/W/F", "Tu/Th"), // TODO: Fix
+                    options = listOf("M/W/F", "Tu/Th"),
                     selectedOption = selectedFilters["Days"],
                     onOptionSelected = { viewModel.dropdownFilter("Days", it) }
                 )
@@ -130,7 +132,7 @@ fun SearchScreen(viewModel: SearchViewModel = viewModel()) { // import viewmodel
             item {
                 FilterDropdown(
                     label = "Time",
-                    options = listOf("8AM - 11:59AM", "12PM - 4:59PM", "5PM - 11:59PM"), // TODO: Fix
+                    options = listOf("8AM - 11:59AM", "12PM - 4:59PM", "5PM - 11:59PM"),
                     selectedOption = selectedFilters["Time"],
                     onOptionSelected = { viewModel.dropdownFilter("Time", it) }
                 )
@@ -139,7 +141,13 @@ fun SearchScreen(viewModel: SearchViewModel = viewModel()) { // import viewmodel
 
         LazyColumn() {
             items(filteredCourses) { course ->
-                SearchCourseCard(course = course)
+                val courseId = "${course.department}${course.courseNumber}"
+
+                SearchCourseCard(
+                    course = course,
+                    isAdded = addedCourses.contains(courseId), // Passes true/false to the card
+                    onAddClick = { viewModel.addOrDeleteCourse(course) } // Triggers the toggle
+                )
             }
         }
 

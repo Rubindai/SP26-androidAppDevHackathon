@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
@@ -53,20 +54,44 @@ data class courseInformation(
 )
 
 @Composable
-fun AddCourseButton(onClick: () -> Unit) {
+fun AddCourseButton(
+    isAdded: Boolean,
+    onClick: () -> Unit) {
+
+    var color = Color(0xFFD1E7DD)
+    if (isAdded) {
+        color = Color(0xFFD1E7DD) // green
+    } else {
+        color = Color(0xFF8B1818) // red
+    }
+
+    var icon = Icons.Default.Check
+    if (isAdded) {
+        icon = Icons.Default.Check
+    } else {
+        icon = Icons.Default.Add
+    }
+
+    var text = "Add Course"
+    if (isAdded) {
+        text = "Remove Course"
+    } else {
+        text = "Add Course"
+    }
+
     IconButton(
         onClick = onClick,
         modifier = Modifier
             .size(40.dp)
             .background(
-                color = Color(0xFF8B1818),
+                color = color,
                 shape = RoundedCornerShape(16.dp)
             )
             .padding(start = 5.dp, end = 5.dp)
     ) {
         Icon(
-            imageVector = Icons.Default.Add,
-            contentDescription = "Add Course",
+            imageVector = icon,
+            contentDescription = text,
             tint = Color.White,
             modifier = Modifier.size(24.dp)
         )
@@ -75,7 +100,11 @@ fun AddCourseButton(onClick: () -> Unit) {
 
 
 @Composable
-fun SearchCourseCard(course: courseInformation) {
+fun SearchCourseCard(
+    course: courseInformation,
+    isAdded: Boolean,
+    onAddClick: () -> Unit
+) {
     var openOrClosed = ""
     var colorTag = Color(0xFF2E7D45)
     var colorTagBackground = Color(0xFFE3F1E8)
@@ -204,12 +233,12 @@ fun SearchCourseCard(course: courseInformation) {
                         color = Color.DarkGray
                     )
                 }
-
             }
             // add button
-            AddCourseButton(onClick = {
-                // viewmodel logic goes here
-            })
+            AddCourseButton(
+                isAdded = isAdded,
+                onClick = onAddClick
+            )
         }
 
     }
@@ -219,5 +248,9 @@ fun SearchCourseCard(course: courseInformation) {
 @Preview
 @Composable
 private fun SearchCourseCardPreview() {
-    SearchCourseCard(course = mockCourses[0])
+    SearchCourseCard(
+        course = mockCourses[0],
+        isAdded = false,
+        onAddClick = {}
+    )
 }

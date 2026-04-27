@@ -64,6 +64,37 @@ class SearchViewModel: ViewModel() {
         filterCourses(newQuery)
     }
 
+    // tracks added courses. We will use courseIDs (Department + Number)
+    private val _addedCourses = MutableStateFlow<Set<String>>(emptySet())
+    val addedCourses: StateFlow<Set<String>> = _addedCourses.asStateFlow()
+
+    // the list of courses added to the schedule
+    private val _mySchedule = MutableStateFlow<List<courseInformation>>(emptyList())
+    val mySchedule: StateFlow<List<courseInformation>> = _mySchedule.asStateFlow()
+
+    // adds or deletes a course from the user's data
+    fun addOrDeleteCourse(course: courseInformation) {
+        val currentAdded = _addedCourses.value.toMutableSet()
+        val currentSchedule = _mySchedule.value.toMutableList()
+
+        // department + number (ex: "HIST1530")
+        val courseId = "${course.department}${course.courseNumber}"
+
+        if (currentAdded.contains(courseId)) {
+            // remove course
+            currentAdded.remove(courseId)
+            currentSchedule.removeAll { "${it.department}${it.courseNumber}" == courseId }
+        } else {
+            // add course
+            currentAdded.add(courseId)
+            currentSchedule.add(course)
+        }
+
+        // update + tell UI about it
+        _addedCourses.value = currentAdded
+        _mySchedule.value = currentSchedule
+    }
+
     fun dropdownFilter(category: String, option: String) {
         // get all selections
         val currentlySelected = _selectedFilters.value.toMutableMap() // this makes the selections editable
