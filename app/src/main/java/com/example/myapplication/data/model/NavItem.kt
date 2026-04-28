@@ -1,7 +1,7 @@
-package com.example.myapplication.model
+package com.example.myapplication.data.model
 
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.example.myapplication.screens.Screen
+import com.example.myapplication.ui.screens.Screen
 
 data class NavItem(
     val screen: Screen,

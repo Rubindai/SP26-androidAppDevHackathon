@@ -1,4 +1,4 @@
-package com.example.myapplication.screens
+package com.example.myapplication.ui.screens
 
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.toRoute

@@ -8,11 +8,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -26,15 +24,18 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.myapplication.model.NavItem
-import com.example.myapplication.screens.DashboardScreen
-import com.example.myapplication.screens.ProfileScreen
-import com.example.myapplication.screens.Screen
-import com.example.myapplication.screens.Screen.DashboardScreen.toScreen
-import com.example.myapplication.screens.SearchScreen
+import com.example.myapplication.data.model.NavItem
+
+import com.example.myapplication.ui.screens.ProfileScreen
+import com.example.myapplication.ui.screens.ProgressScreen
+import com.example.myapplication.ui.screens.Screen
+import com.example.myapplication.ui.screens.Screen.DashboardScreen.toScreen
+import com.example.myapplication.ui.screens.SearchScreen
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.viewmodel.SearchViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,7 +83,7 @@ class MainActivity : ComponentActivity() {
                             startDestination = Screen.DashboardScreen
                         ) {
                             composable<Screen.DashboardScreen> {
-                                DashboardScreen()
+                                ProgressScreen()
                             }
                             composable<Screen.SearchScreen> {
                                 SearchScreen(viewModel = searchViewModel)
