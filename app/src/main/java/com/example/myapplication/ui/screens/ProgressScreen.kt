@@ -24,7 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.myapplication.components.ProgressCircle
 import com.example.myapplication.components.RequirementCard
 import com.example.myapplication.components.StatInline
@@ -36,7 +36,7 @@ import com.example.myapplication.viewmodel.ProgressViewModel
 
 @Composable
 fun ProgressScreen(
-    viewModel: ProgressViewModel = viewModel()
+    viewModel: ProgressViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     ProgressContent(state = uiState)
