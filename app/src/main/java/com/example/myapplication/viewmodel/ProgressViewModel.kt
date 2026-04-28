@@ -3,13 +3,10 @@ package com.example.myapplication.viewmodel
 import androidx.lifecycle.ViewModel
 import com.example.myapplication.data.model.ProgressStatus
 import com.example.myapplication.data.model.Requirement
-import com.example.myapplication.data.model.Student
 import com.example.myapplication.data.repository.StudentRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
-
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
@@ -31,25 +28,25 @@ data class ProgressUiState(
 @HiltViewModel
 class ProgressViewModel @Inject constructor(
     private val studentRepository: StudentRepository
-) : ViewModel(){
+) : ViewModel() {
 
-//    private val _uiState = MutableStateFlow(ProgressUiState(
+    //    private val _uiState = MutableStateFlow(ProgressUiState(
 //
 //    ))
-private val _uiState = MutableStateFlow(
-    ProgressUiState(
-        major = studentRepository.student().major,
-        requirements = studentRepository.requirements(),
-        percent = 0f,
-        complete = 0,
-        inProgress = 0,
-        left = 0,
-        targetTerm = studentRepository.student().targetTerm,
-        onPaceTerm = "Spring 2028",
-        completedCredits = studentRepository.completedCredits(),
-        totalCreditsTarget = studentRepository.targetTotalCredits(),
-    ),
-)
+    private val _uiState = MutableStateFlow(
+        ProgressUiState(
+            major = studentRepository.student().major,
+            requirements = studentRepository.requirements(),
+            percent = 0f,
+            complete = 0,
+            inProgress = 0,
+            left = 0,
+            targetTerm = studentRepository.student().targetTerm,
+            onPaceTerm = "Spring 2028",
+            completedCredits = studentRepository.completedCredits(),
+            totalCreditsTarget = studentRepository.targetTotalCredits(),
+        ),
+    )
     val uiState = _uiState.asStateFlow()
 
     data class ProgressUiState(

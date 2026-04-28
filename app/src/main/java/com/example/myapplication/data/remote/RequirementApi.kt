@@ -19,7 +19,11 @@ object RequirementSource {
         Requirement(
             title = "CS Core",
             items = listOf(
-                RequirementItem("Object-Oriented Data Structures", ProgressStatus.COMPLETE, "CS 2110"),
+                RequirementItem(
+                    "Object-Oriented Data Structures",
+                    ProgressStatus.COMPLETE,
+                    "CS 2110"
+                ),
                 RequirementItem("Discrete Structures", ProgressStatus.IN_PROGRESS, "CS 2800"),
                 RequirementItem("Functional Programming", ProgressStatus.RECOMMENDED, "CS 3110"),
                 RequirementItem("Computer System Organization", ProgressStatus.MISSING, "CS 3410"),
@@ -47,9 +51,17 @@ object RequirementSource {
             title = "Breadth Distributions",
             items = listOf(
                 RequirementItem("Historical Analysis (HA)", ProgressStatus.MISSING, "HIST 1530"),
-                RequirementItem("Knowledge, Cog & Moral Reasoning (KCM)", ProgressStatus.COMPLETE, "PHIL 1440"),
+                RequirementItem(
+                    "Knowledge, Cog & Moral Reasoning (KCM)",
+                    ProgressStatus.COMPLETE,
+                    "PHIL 1440"
+                ),
                 RequirementItem("Social & Behavioral (SBA)", ProgressStatus.COMPLETE, "PSYCH 1101"),
-                RequirementItem("Literature & the Arts (LA)", ProgressStatus.RECOMMENDED, "ENGL 2800"),
+                RequirementItem(
+                    "Literature & the Arts (LA)",
+                    ProgressStatus.RECOMMENDED,
+                    "ENGL 2800"
+                ),
                 RequirementItem("Cultural Analysis (CA)", ProgressStatus.MISSING, "ANTHR 1101"),
             ),
         ),

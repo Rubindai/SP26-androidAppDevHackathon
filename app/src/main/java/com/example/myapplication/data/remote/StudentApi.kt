@@ -5,7 +5,7 @@ import com.example.myapplication.data.model.Student
 object StudentApi {
     val student: Student = Student(
         name = "Avery Chen",
-        initial="AC",
+        initial = "AC",
         netid = "ac2847",
         major = "Undeclared (A&S)",
         year = "Sophomore",

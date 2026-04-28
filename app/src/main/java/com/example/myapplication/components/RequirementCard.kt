@@ -18,7 +18,6 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.remote.creation.dsl.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,7 +27,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
-
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,71 +35,70 @@ import com.example.myapplication.data.model.ProgressStatus
 import com.example.myapplication.data.model.Requirement
 import com.example.myapplication.data.model.RequirementItem
 import com.example.myapplication.ui.theme.Fraunces
-import kotlin.compareTo
-import kotlin.text.toFloat
 
 
 @Composable
-fun RequirementCard(requirement: Requirement){
+fun RequirementCard(requirement: Requirement) {
     var open by remember { mutableStateOf(false) }
     val complete = requirement.items.count { it.status == ProgressStatus.COMPLETE }
     val total = requirement.items.size
-    Column(Modifier
-        .clip(RoundedCornerShape(14.dp))
-        .background(color = Color.White)
-        .fillMaxWidth()) {
-    Row (  Modifier
-        .clickable { open = !open }
-        .fillMaxWidth()
-        .padding(16.dp)
-        .border(1.dp, Color(0xFFE5E0D4), RoundedCornerShape(14.dp)),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically){
+    Column(
+        Modifier
+            .clip(RoundedCornerShape(14.dp))
+            .background(color = Color.White)
+            .fillMaxWidth()
+    ) {
+        Row(
+            Modifier
+                .clickable { open = !open }
+                .fillMaxWidth()
+                .padding(16.dp)
+                .border(1.dp, Color(0xFFE5E0D4), RoundedCornerShape(14.dp)),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically) {
 
-        Column(
-            modifier = Modifier.weight(1f)
-        ) {
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
 
-            Text(
-                requirement.title,
-                fontFamily = Fraunces,
-                fontSize = 17.sp
+                Text(
+                    requirement.title,
+                    fontFamily = Fraunces,
+                    fontSize = 17.sp
 
-            )
-            Text("$complete of $total complete",
-                fontFamily = Fraunces,
-                fontSize = 12.sp,
-                color = Color(0xFF6C665C)
-            )
+                )
+                Text(
+                    "$complete of $total complete",
+                    fontFamily = Fraunces,
+                    fontSize = 12.sp,
+                    color = Color(0xFF6C665C)
+                )
 
             }
-        Box(modifier = Modifier.width(72.dp)) {
-            LinearProgressBar(progress = complete.toFloat() / total.toFloat())
-        }
-        Icon(
-            imageVector = Icons.Filled.KeyboardArrowDown,
-            contentDescription = if (open) "Collapse" else "Expand",
-            tint = Color(0xFF6C665C),
-            modifier = Modifier
-                .size(20.dp)
-                .rotate(if (open) 180f else 0f),
-        )
+            Box(modifier = Modifier.width(72.dp)) {
+                LinearProgressBar(progress = complete.toFloat() / total.toFloat())
+            }
+            Icon(
+                imageVector = Icons.Filled.KeyboardArrowDown,
+                contentDescription = if (open) "Collapse" else "Expand",
+                tint = Color(0xFF6C665C),
+                modifier = Modifier
+                    .size(20.dp)
+                    .rotate(if (open) 180f else 0f),
+            )
 
         }
-    AnimatedVisibility(visible = open) {
-        Column(modifier = Modifier.fillMaxWidth()) {
-            HorizontalDivider(color = Color(0xFFE5E0D4))
-            requirement.items.forEachIndexed { idx, item ->
-                if (idx > 0) HorizontalDivider(color = Color(0xFFE5E0D4))
-                RequirementItemRow(item)
+        AnimatedVisibility(visible = open) {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                HorizontalDivider(color = Color(0xFFE5E0D4))
+                requirement.items.forEachIndexed { idx, item ->
+                    if (idx > 0) HorizontalDivider(color = Color(0xFFE5E0D4))
+                    RequirementItemRow(item)
+                }
             }
         }
     }
-    }
-    }
-
-
-
+}
 
 
 private val sampleRequirement = Requirement(
@@ -123,6 +120,6 @@ private val sampleRequirement = Requirement(
 
 @Preview
 @Composable
-fun PreviewRequireCard(){
+fun PreviewRequireCard() {
     RequirementCard(requirement = sampleRequirement)
 }

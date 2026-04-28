@@ -2,7 +2,6 @@ package com.example.myapplication.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
@@ -23,12 +22,14 @@ import com.example.myapplication.ui.theme.Fraunces
 fun Avatar(
     initial: String,
 
-) {
-    Box(modifier = Modifier
-        .size(36.dp)
-        .clip(CircleShape)
-        .background(Color(0xFFFFF6EC)),
-        contentAlignment = Alignment.Center){
+    ) {
+    Box(
+        modifier = Modifier
+            .size(36.dp)
+            .clip(CircleShape)
+            .background(Color(0xFFFFF6EC)),
+        contentAlignment = Alignment.Center
+    ) {
         Text(
             text = initial,
             color = MaterialTheme.colorScheme.onTertiaryContainer,
@@ -43,6 +44,6 @@ fun Avatar(
 
 @Preview
 @Composable
-fun PreviewAvatar(){
+fun PreviewAvatar() {
     Avatar("AC")
 }

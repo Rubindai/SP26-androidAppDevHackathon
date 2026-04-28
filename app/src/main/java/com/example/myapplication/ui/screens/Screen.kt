@@ -14,6 +14,7 @@ sealed class Screen {
 
     @Serializable
     data class ProfileScreen(val userId: String) : Screen()
+
     // ...
     fun NavBackStackEntry.toScreen(): Screen? =
         when (destination.route?.substringAfterLast(".")?.substringBefore("/")) {

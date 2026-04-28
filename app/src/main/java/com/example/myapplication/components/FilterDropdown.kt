@@ -64,7 +64,9 @@ fun FilterDropdown(
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            modifier = Modifier.background(Color.White).heightIn(max = 280.dp)
+            modifier = Modifier
+                .background(Color.White)
+                .heightIn(max = 280.dp)
         ) {
             options.forEach { option ->
                 DropdownMenuItem(

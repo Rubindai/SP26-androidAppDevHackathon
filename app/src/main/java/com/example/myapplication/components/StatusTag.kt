@@ -32,16 +32,19 @@ fun StatusTag(status: ProgressStatus, modifier: Modifier = Modifier) {
             bg = Color(0xFFE3F1E8)  // success soft
             fg = Color(0xFF2E7D45)  // success fg
         }
+
         ProgressStatus.IN_PROGRESS -> {
             label = "In Progress"
             bg = Color(0xFFE0ECF5)  // info soft
             fg = Color(0xFF1F5A88)  // info fg
         }
+
         ProgressStatus.MISSING -> {
             label = "Missing"
             bg = Color(0xFFF3EFE6)  // paper shadow
             fg = Color(0xFF6C665C)  // ink soft
         }
+
         ProgressStatus.RECOMMENDED -> {
             label = "Recommended"
             bg = Color(0xFFFAECD0)  // warn soft
@@ -77,13 +80,13 @@ fun StatusTag(status: ProgressStatus, modifier: Modifier = Modifier) {
 @Composable
 private fun StatusTagPreview() {
 
-        Row(
-            modifier = Modifier.padding(12.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-           StatusTag(ProgressStatus.COMPLETE)
-      StatusTag(ProgressStatus.IN_PROGRESS)
-StatusTag(ProgressStatus.MISSING)
-  StatusTag(ProgressStatus.RECOMMENDED)
-        }
+    Row(
+        modifier = Modifier.padding(12.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        StatusTag(ProgressStatus.COMPLETE)
+        StatusTag(ProgressStatus.IN_PROGRESS)
+        StatusTag(ProgressStatus.MISSING)
+        StatusTag(ProgressStatus.RECOMMENDED)
     }
+}

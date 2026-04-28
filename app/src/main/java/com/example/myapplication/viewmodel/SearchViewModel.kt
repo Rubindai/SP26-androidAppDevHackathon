@@ -44,7 +44,7 @@ val mockCourses = listOf(
 )
 
 
-class SearchViewModel: ViewModel() {
+class SearchViewModel : ViewModel() {
     private val allCourses = mockCourses // we should get this from the backend
     private val _searchingText = MutableStateFlow("") // the text the user types into the search bar
 
@@ -96,7 +96,8 @@ class SearchViewModel: ViewModel() {
 
     fun dropdownFilter(category: String, option: String) {
         // get all selections
-        val currentlySelected = _selectedFilters.value.toMutableMap() // this makes the selections editable
+        val currentlySelected =
+            _selectedFilters.value.toMutableMap() // this makes the selections editable
 
         if (currentlySelected[category] == option) { // this will mirror the logic of the prototype
             currentlySelected.remove(category) // where if the user clicks on the same option

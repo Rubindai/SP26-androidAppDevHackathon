@@ -17,18 +17,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.data.model.ProgressStatus
-
 import com.example.myapplication.data.model.RequirementItem
-import com.example.myapplication.ui.theme.Fraunces
 
 @Composable
-fun RequirementItemRow(requirementItem: RequirementItem){
-    Row(modifier = Modifier
-        .background(Color.White)
-        .fillMaxWidth()
-        .padding(horizontal = 16.dp, vertical = 12.dp),
+fun RequirementItemRow(requirementItem: RequirementItem) {
+    Row(
+        modifier = Modifier
+            .background(Color.White)
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(12.dp),) {
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
         StatusDot(requirementItem.status)
         Column(modifier = Modifier.weight(1f)) {
             Text(
@@ -38,14 +38,14 @@ fun RequirementItemRow(requirementItem: RequirementItem){
                 color = Color(0xFF1C1A16),
             )
 
-                Text(
-                    text = requirementItem.course,
-                    fontSize = 12.sp,
-                    color = Color(0xFF6C665C),
-                    fontFamily = FontFamily.Monospace,
-                    modifier = Modifier.padding(top = 1.dp),
-                )
-            }
+            Text(
+                text = requirementItem.course,
+                fontSize = 12.sp,
+                color = Color(0xFF6C665C),
+                fontFamily = FontFamily.Monospace,
+                modifier = Modifier.padding(top = 1.dp),
+            )
+        }
 
         StatusTag(requirementItem.status)
 
@@ -55,9 +55,14 @@ fun RequirementItemRow(requirementItem: RequirementItem){
 }
 
 
-
 @Preview
 @Composable
-fun PreviewRequirementItemRow(){
-    RequirementItemRow(RequirementItem("First-Year Writing I", ProgressStatus.COMPLETE, "ENGL 1170"),)
+fun PreviewRequirementItemRow() {
+    RequirementItemRow(
+        RequirementItem(
+            "First-Year Writing I",
+            ProgressStatus.COMPLETE,
+            "ENGL 1170"
+        ),
+    )
 }

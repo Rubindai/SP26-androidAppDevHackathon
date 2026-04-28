@@ -6,7 +6,6 @@ plugins {
     id("com.google.devtools.ksp") version "2.2.10-2.0.2"
 
 
-
 }
 
 android {

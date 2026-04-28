@@ -1,7 +1,6 @@
 package com.example.myapplication.components
 
 
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -56,18 +55,21 @@ fun StatusDot(status: ProgressStatus, modifier: Modifier = Modifier) {
                 tint = Color.White,
                 modifier = Modifier.size(13.dp),
             )
+
             ProgressStatus.IN_PROGRESS -> Box(
                 modifier = Modifier
                     .size(8.dp)
                     .clip(CircleShape)
                     .background(Color.White),
             )
+
             ProgressStatus.RECOMMENDED -> Icon(
                 imageVector = Icons.Filled.AutoAwesome,
                 contentDescription = null,
                 tint = Color.White,
                 modifier = Modifier.size(12.dp),
             )
+
             ProgressStatus.MISSING -> Unit
         }
     }
@@ -77,14 +79,14 @@ fun StatusDot(status: ProgressStatus, modifier: Modifier = Modifier) {
 @Composable
 private fun StatusDotPreview() {
 
-        Row(
-            modifier = Modifier.padding(12.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            StatusDot(ProgressStatus.COMPLETE)
-            StatusDot(ProgressStatus.IN_PROGRESS)
-            StatusDot(ProgressStatus.RECOMMENDED)
-            StatusDot(ProgressStatus.MISSING)
-        }
+    Row(
+        modifier = Modifier.padding(12.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        StatusDot(ProgressStatus.COMPLETE)
+        StatusDot(ProgressStatus.IN_PROGRESS)
+        StatusDot(ProgressStatus.RECOMMENDED)
+        StatusDot(ProgressStatus.MISSING)
+    }
 
 }
