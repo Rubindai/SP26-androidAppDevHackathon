@@ -47,13 +47,13 @@ fun RequirementCard(requirement: Requirement) {
             .clip(RoundedCornerShape(14.dp))
             .background(color = Color.White)
             .fillMaxWidth()
+            .border(1.dp, Color(0xFFE5E0D4), RoundedCornerShape(14.dp))
     ) {
         Row(
             Modifier
                 .clickable { open = !open }
                 .fillMaxWidth()
-                .padding(16.dp)
-                .border(1.dp, Color(0xFFE5E0D4), RoundedCornerShape(14.dp)),
+                .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically) {
 
