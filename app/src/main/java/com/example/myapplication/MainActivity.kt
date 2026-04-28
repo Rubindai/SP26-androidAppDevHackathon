@@ -25,6 +25,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.data.model.NavItem
+import com.example.myapplication.ui.screens.OnboardingScreen
 
 import com.example.myapplication.ui.screens.ProfileScreen
 import com.example.myapplication.ui.screens.ProgressScreen
@@ -63,25 +64,46 @@ class MainActivity : ComponentActivity() {
             MyApplicationTheme {
                 val navController = rememberNavController()
                 val navBackStackEntry = navController.currentBackStackEntryAsState().value
+                val currentRoute = navBackStackEntry?.destination?.route
                 val searchViewModel: SearchViewModel = viewModel()
 
-                Scaffold(modifier = Modifier.fillMaxSize(), bottomBar = {
-                    NavigationBar {
-                        tabs.map { item ->
-                            NavigationBarItem(
-                                selected = item.screen == navBackStackEntry?.toScreen(),
-                                onClick = { navController.navigate(item.screen) },
-                                icon = { Icon(imageVector = item.icon, contentDescription = null) },
-                                label = { Text(text = item.label) }
-                            )
+                Scaffold(modifier = Modifier.fillMaxSize(),
+                    bottomBar = {
+                        if (currentRoute != Screen.OnboardingScreen::class.qualifiedName) { // this
+                            // makes it so the bottom bar will not show up in the onboarding screen
+                            NavigationBar {
+                                tabs.map { item ->
+                                    NavigationBarItem(
+                                        selected = item.screen == navBackStackEntry?.toScreen(),
+                                        onClick = { navController.navigate(item.screen) },
+                                        icon = {
+                                            Icon(
+                                                imageVector = item.icon,
+                                                contentDescription = null
+                                            )
+                                        },
+                                        label = { Text(text = item.label) }
+                                    )
+                                }
+                            }
                         }
-                    }
                 }) { innerPadding ->
                     Box(modifier = Modifier.padding(innerPadding)) {
                         NavHost(
                             navController = navController,
-                            startDestination = Screen.DashboardScreen
+                            startDestination = Screen.OnboardingScreen
                         ) {
+                            composable<Screen.OnboardingScreen> {
+                                OnboardingScreen(
+                                    onClick = {
+                                        navController.navigate(Screen.DashboardScreen) {
+                                            // clears the Onboarding screen from the backstack
+                                            // so the user can't "Go Back" to the login page
+                                            popUpTo(Screen.OnboardingScreen) { inclusive = true }
+                                        }
+                                    }
+                                )
+                            }
                             composable<Screen.DashboardScreen> {
                                 ProgressScreen()
                             }

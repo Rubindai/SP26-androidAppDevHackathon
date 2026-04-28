@@ -7,6 +7,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed class Screen {
     @Serializable
+    data object OnboardingScreen : Screen()
+    @Serializable
     data object DashboardScreen : Screen()
 
     @Serializable
