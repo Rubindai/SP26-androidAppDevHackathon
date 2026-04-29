@@ -61,8 +61,6 @@ class ProgressViewModel @Inject constructor(
         val completedCredits: Int,
         val totalCreditsTarget: Int,
     ) {
-
-
         /** Progress shown as 0–100 for the ring's center label. */
         val percentLabel: Int
             get() = (percent * 100).toInt()

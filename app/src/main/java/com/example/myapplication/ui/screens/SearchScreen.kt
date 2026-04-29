@@ -1,6 +1,8 @@
 package com.example.myapplication.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -28,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapplication.components.FilterDropdown
 import com.example.myapplication.components.SearchCourseCard
+import com.example.myapplication.components.SemesterDropdown
 import com.example.myapplication.ui.theme.Fraunces
 import com.example.myapplication.viewmodel.SearchViewModel
 
@@ -46,25 +50,23 @@ fun SearchScreen(viewModel: SearchViewModel = viewModel()) { // import viewmodel
             .fillMaxSize()
             .background(Color(0xFFFBF8F2))
             .padding(start = 16.dp, end = 16.dp, top = 20.dp),
-    ) {
-        Text(
-            text = "Find courses",
-            fontFamily = Fraunces,
-            fontWeight = FontWeight(600),
-            fontSize = 28.sp,
-        )
 
+    ) {
         Row(
-            modifier = Modifier
-                .padding(top = 5.dp, bottom = 10.dp)
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-//            Text(
-//                text = "NEED",
-//                fontFamily = FontFamily.SansSerif,
-//                fontWeight = FontWeight(600),
-//                color = Color(0xFF6C665C),
-//            )
+            Text(
+                text = "Find courses",
+                fontFamily = Fraunces,
+                fontWeight = FontWeight(600),
+                fontSize = 28.sp,
+            )
+            Box() {
+                SemesterDropdown(viewModel)
+            }
         }
+
 
         // 2. Search Bar
         OutlinedTextField(

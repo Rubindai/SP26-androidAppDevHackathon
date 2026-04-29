@@ -2,6 +2,9 @@ package com.example.myapplication.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.example.myapplication.components.courseInformation
+import com.example.myapplication.data.repository.StudentRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -40,12 +43,36 @@ val mockCourses = listOf(
         time = "11:40 AM",
         location = "Uris Hall",
         open = false // testing "Closed"
+    ),
+    courseInformation(
+        name = "Introduction to U.S. History",
+        department = "HIST",
+        courseNumber = "1530",
+        credits = 4,
+        description = "A survey of American history.",
+        prerequisites = emptyList(),
+        corequisites = emptyList(),
+        distributions = listOf("HA-AS"),
+        year = 2025,            // testing if filtering by semester works
+        semester = "Spring",
+        instructor = "R. Baptist",
+        days = "TR",
+        time = "11:40 AM",
+        location = "Uris Hall",
+        open = false
     )
 )
 
 
-class SearchViewModel : ViewModel() {
+@HiltViewModel
+class SearchViewModel @Inject constructor(
+    private val studentRepository: StudentRepository
+) : ViewModel() {
     private val allCourses = mockCourses // we should get this from the backend
+
+    private val _selectedSemester =  MutableStateFlow("Spring 2026")
+    val selectedSemester: StateFlow<String> = _selectedSemester.asStateFlow()
+
     private val _searchingText = MutableStateFlow("") // the text the user types into the search bar
 
     // this is for the dropdown filters
@@ -57,6 +84,11 @@ class SearchViewModel : ViewModel() {
 
     private val _filteredCourses = MutableStateFlow(allCourses)
     val filteredCourses: StateFlow<List<courseInformation>> = _filteredCourses.asStateFlow()
+
+    fun onSemesterChanged(newSemester: String) {
+        _selectedSemester.value = newSemester
+        filterCourses(_searchingText.value)
+    }
 
     fun onSearchQueryChanged(newQuery: String) {
         _searchingText.value = newQuery
@@ -111,8 +143,14 @@ class SearchViewModel : ViewModel() {
 
     private fun filterCourses(searchBarText: String) {
         val filters = _selectedFilters.value // get filters
+        val currentTerm = _selectedSemester.value // get the semester
+
 
         _filteredCourses.value = allCourses.filter { course ->
+            val term = currentTerm.split(" ")
+
+            val matchesSemester = course.semester == term[0] && course.year == term[1].toInt()
+
             // search bar logic
             var matchesSearch = false
             if (searchBarText.isEmpty()) {
@@ -196,8 +234,17 @@ class SearchViewModel : ViewModel() {
                 matchesTime = true
             }
 
-            matchesSearch && matchesDist && matchesCredits && matchesSubject && matchesDays
+            matchesSemester && matchesSearch && matchesDist && matchesCredits && matchesSubject && matchesDays
                     && matchesTime && matchesLevels
         }
+    }
+
+    fun getAllSemesters(): List<String> {
+        return listOf(
+            "Fall 2024", "Spring 2025",
+            "Fall 2025", "Spring 2026",
+            "Fall 2026", "Spring 2027",
+            "Fall 2027", "Spring 2028"
+        )
     }
 }

@@ -19,6 +19,10 @@ class StudentRepository @Inject constructor(
     // added a function to update the student
     fun updateStudent(newStudent: Student) {
         _currentStudent.value = newStudent
+//        This can be used after we are provided with the API
+//        viewModelScope.launch {
+//            retroFitApi.postStudentProfile(newStudent)
+//        }
     }
 
     fun student(): Student = StudentApi.student

@@ -114,7 +114,6 @@ fun ProgressContent(state: ProgressViewModel.ProgressUiState) {
                         StatInline(state.left, "Left", Color(0xFFC9C4B9))
                     }
 
-
                 }
 
             }
