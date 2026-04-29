@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -53,8 +54,11 @@ fun SearchScreen(viewModel: SearchViewModel = viewModel()) { // import viewmodel
 
     ) {
         Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
                 text = "Find courses",
@@ -62,9 +66,9 @@ fun SearchScreen(viewModel: SearchViewModel = viewModel()) { // import viewmodel
                 fontWeight = FontWeight(600),
                 fontSize = 28.sp,
             )
-            Box() {
-                SemesterDropdown(viewModel)
-            }
+
+            SemesterDropdown(viewModel)
+
         }
 
 
