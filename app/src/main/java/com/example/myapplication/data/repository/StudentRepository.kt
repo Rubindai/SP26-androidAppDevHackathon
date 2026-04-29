@@ -1,7 +1,9 @@
 package com.example.myapplication.data.repository
 
+import com.example.myapplication.components.courseInformation
 import com.example.myapplication.data.model.Requirement
 import com.example.myapplication.data.model.Student
+import com.example.myapplication.data.remote.CourseApi
 import com.example.myapplication.data.remote.RequirementSource
 import com.example.myapplication.data.remote.StudentApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,4 +31,8 @@ class StudentRepository @Inject constructor(
     fun requirements(): List<Requirement> = RequirementSource.requirements
     fun completedCredits(): Int = StudentApi.completedCredits
     fun targetTotalCredits(): Int = StudentApi.targetTotalCredits
+
+    fun getAllCourses(): List<courseInformation> {
+        return CourseApi.mockCourses
+    }
 }

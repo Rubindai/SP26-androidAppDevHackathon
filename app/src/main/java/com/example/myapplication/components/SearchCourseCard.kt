@@ -24,11 +24,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.ui.theme.Fraunces
-import com.example.myapplication.viewmodel.mockCourses
 
 data class courseInformation(
     val name: String,
@@ -237,15 +235,4 @@ fun SearchCourseCard(
         }
 
     }
-}
-
-
-@Preview
-@Composable
-private fun SearchCourseCardPreview() {
-    SearchCourseCard(
-        course = mockCourses[0],
-        isAdded = false,
-        onAddClick = {}
-    )
 }

@@ -9,66 +9,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-val mockCourses = listOf(
-    courseInformation(
-        name = "Intermediate Design & Programming for the Web",
-        department = "INFO",
-        courseNumber = "2300",
-        credits = 4,
-        description = "Web design and programming.",
-        prerequisites = listOf("INFO 1300"),
-        corequisites = emptyList(),
-        distributions = listOf("ALC-AS", "SBA-AS"),
-        year = 2026,
-        semester = "Spring",
-        instructor = "D. Schneider",
-        days = "MWF",
-        time = "10:10 AM",
-        location = "Rhodes Hall 121",
-        open = true
-    ),
-    courseInformation(
-        name = "Introduction to U.S. History",
-        department = "HIST",
-        courseNumber = "1530",
-        credits = 4,
-        description = "A survey of American history.",
-        prerequisites = emptyList(),
-        corequisites = emptyList(),
-        distributions = listOf("HA-AS"),
-        year = 2026,
-        semester = "Spring",
-        instructor = "R. Baptist",
-        days = "TR",
-        time = "11:40 AM",
-        location = "Uris Hall",
-        open = false // testing "Closed"
-    ),
-    courseInformation(
-        name = "Introduction to U.S. History",
-        department = "HIST",
-        courseNumber = "1530",
-        credits = 4,
-        description = "A survey of American history.",
-        prerequisites = emptyList(),
-        corequisites = emptyList(),
-        distributions = listOf("HA-AS"),
-        year = 2025,            // testing if filtering by semester works
-        semester = "Spring",
-        instructor = "R. Baptist",
-        days = "TR",
-        time = "11:40 AM",
-        location = "Uris Hall",
-        open = false
-    )
-)
-
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val studentRepository: StudentRepository
 ) : ViewModel() {
-    private val allCourses = mockCourses // we should get this from the backend
+    private val allCourses = studentRepository.getAllCourses() // we should get this from the backend
 
     private val _selectedSemester =  MutableStateFlow("Spring 2026")
     val selectedSemester: StateFlow<String> = _selectedSemester.asStateFlow()
@@ -84,6 +30,10 @@ class SearchViewModel @Inject constructor(
 
     private val _filteredCourses = MutableStateFlow(allCourses)
     val filteredCourses: StateFlow<List<courseInformation>> = _filteredCourses.asStateFlow()
+
+    init {
+        filterCourses("")   // this is needed to get the default _selectedSemester
+    }
 
     fun onSemesterChanged(newSemester: String) {
         _selectedSemester.value = newSemester
