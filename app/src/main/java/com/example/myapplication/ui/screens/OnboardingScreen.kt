@@ -88,18 +88,18 @@ fun OnboardingScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         OnboardingTextField(
-            label = "Major",
-            value = student.major,
-            onValueChange = { viewModel.updateMajor(it) }
+            label = "Year Graduating",
+            value = student.year,
+            onValueChange = { viewModel.updateYear(it) }
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        OnboardingTextField(
-            label = "College",
-            value = student.college,
-            onValueChange = { viewModel.updateCollege(it) }
-        )
+//        Spacer(modifier = Modifier.height(16.dp))
+//
+//        OnboardingTextField(
+//            label = "College",
+//            value = student.college,
+//            onValueChange = { viewModel.updateCollege(it) }
+//        )
 
         Spacer(modifier = Modifier.height(32.dp))
 

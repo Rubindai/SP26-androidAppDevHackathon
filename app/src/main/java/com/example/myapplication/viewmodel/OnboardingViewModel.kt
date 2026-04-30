@@ -27,6 +27,11 @@ class UserViewModel @Inject constructor(
         _studentState.value = _studentState.value.copy(major = major)
     }
 
+    fun updateYear(year: String) {
+        _studentState.value = _studentState.value.copy(year = year)
+    }
+
+
     fun updateNetId(netid: String) {
         _studentState.value = _studentState.value.copy(netid = netid)
     }

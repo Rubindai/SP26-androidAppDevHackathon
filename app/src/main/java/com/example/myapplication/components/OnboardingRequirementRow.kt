@@ -36,7 +36,7 @@ fun RequirementCheckItem(
             .fillMaxWidth()
             .border(
                 BorderStroke(1.dp, Color.Gray),
-                shape = RoundedCornerShape(4.dp)
+                shape = RoundedCornerShape(10.dp)
             )
             .background(if (isChecked) Color(0xFFFDF7F7) else Color.White)
             .clickable { onClicked() }
