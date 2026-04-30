@@ -26,14 +26,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.data.model.NavItem
+import com.example.myapplication.data.model.Student
 import com.example.myapplication.ui.screens.OnboardingScreen
 
 import com.example.myapplication.ui.screens.ProfileScreen
 import com.example.myapplication.ui.screens.ProgressScreen
+import com.example.myapplication.ui.screens.RequirementsChecklistScreen
 import com.example.myapplication.ui.screens.Screen
 import com.example.myapplication.ui.screens.Screen.DashboardScreen.toScreen
 import com.example.myapplication.ui.screens.SearchScreen
 import com.example.myapplication.ui.theme.MyApplicationTheme
+import com.example.myapplication.viewmodel.OnboardingRequirementViewModel
 import com.example.myapplication.viewmodel.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -67,10 +70,12 @@ class MainActivity : ComponentActivity() {
                 val navBackStackEntry = navController.currentBackStackEntryAsState().value
                 val currentRoute = navBackStackEntry?.destination?.route
                 val searchViewModel: SearchViewModel = hiltViewModel()
+                val requirementsViewModel: OnboardingRequirementViewModel = hiltViewModel()
 
                 Scaffold(modifier = Modifier.fillMaxSize(),
                     bottomBar = {
-                        if (currentRoute != Screen.OnboardingScreen::class.qualifiedName) { // this
+                        if (currentRoute != Screen.OnboardingScreen::class.qualifiedName &&
+                            currentRoute != Screen.OnboardingRequirementScreen::class.qualifiedName) { // this
                             // makes it so the bottom bar will not show up in the onboarding screen
                             NavigationBar {
                                 tabs.map { item ->
@@ -97,10 +102,25 @@ class MainActivity : ComponentActivity() {
                             composable<Screen.OnboardingScreen> {
                                 OnboardingScreen(
                                     onClick = {
-                                        navController.navigate(Screen.DashboardScreen) {
+                                        navController.navigate(Screen.OnboardingRequirementScreen) {
                                             // clears the Onboarding screen from the backstack
                                             // so the user can't "Go Back" to the login page
                                             popUpTo(Screen.OnboardingScreen) { inclusive = true }
+                                        }
+                                    }
+                                )
+                            }
+                            composable<Screen.OnboardingRequirementScreen> {
+                                RequirementsChecklistScreen(
+                                    student = Student(completed = requirementsViewModel.completedCourseIds),
+                                    onToggleCourse = { courseId ->
+                                        requirementsViewModel.toggleCourse(courseId)
+                                    },
+                                    onDone = {
+                                        requirementsViewModel.finishOnboarding()
+                                        navController.navigate(Screen.DashboardScreen) {
+                                            // Now we clear the checklist from the stack too
+                                            popUpTo(Screen.OnboardingRequirementScreen) { inclusive = true }
                                         }
                                     }
                                 )

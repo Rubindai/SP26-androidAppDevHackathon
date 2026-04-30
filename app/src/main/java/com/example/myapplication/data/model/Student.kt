@@ -1,6 +1,5 @@
 package com.example.myapplication.data.model
 
-
 data class Student(
     val name: String = "",
     val initial: String = "",

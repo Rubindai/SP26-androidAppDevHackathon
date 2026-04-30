@@ -112,7 +112,7 @@ fun OnboardingScreen(
             shape = RoundedCornerShape(12.dp)
         ) {
             Text(
-                text = "Start Planning",
+                text = "Next",
                 color = Color.White,
                 fontSize = 18.sp)
         }

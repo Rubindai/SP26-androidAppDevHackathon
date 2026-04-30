@@ -9,6 +9,8 @@ sealed class Screen {
     @Serializable
     data object OnboardingScreen : Screen()
     @Serializable
+    data object OnboardingRequirementScreen : Screen()
+    @Serializable
     data object DashboardScreen : Screen()
 
     @Serializable
