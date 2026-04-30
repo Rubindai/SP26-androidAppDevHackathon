@@ -14,10 +14,12 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -77,10 +79,16 @@ class MainActivity : ComponentActivity() {
                         if (currentRoute != Screen.OnboardingScreen::class.qualifiedName &&
                             currentRoute != Screen.OnboardingRequirementScreen::class.qualifiedName) { // this
                             // makes it so the bottom bar will not show up in the onboarding screen
-                            NavigationBar {
+                            NavigationBar(
+                                containerColor = Color(0xFFF9F7F2)
+                            ) {
                                 tabs.map { item ->
                                     NavigationBarItem(
-                                        selected = item.screen == navBackStackEntry?.toScreen(),
+                                        // before, it didn't recognize Dashboard and ProfileScreen as a screen
+                                        // because they are objects, so this new change makes it work now
+                                        // After you implement the profile screen as an object, it should
+                                        // start displaying the pill background as well
+                                        selected = currentRoute == item.screen::class.qualifiedName,
                                         onClick = { navController.navigate(item.screen) },
                                         icon = {
                                             Icon(
@@ -88,7 +96,10 @@ class MainActivity : ComponentActivity() {
                                                 contentDescription = null
                                             )
                                         },
-                                        label = { Text(text = item.label) }
+                                        label = { Text(text = item.label) },
+                                        colors = NavigationBarItemDefaults.colors(
+                                            indicatorColor = Color(0xFFF2E7E7)
+                                        )
                                     )
                                 }
                             }
