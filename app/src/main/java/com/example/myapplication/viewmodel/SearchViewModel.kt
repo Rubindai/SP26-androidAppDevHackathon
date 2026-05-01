@@ -1,9 +1,10 @@
 package com.example.myapplication.viewmodel
 
 import androidx.lifecycle.ViewModel
+import com.example.myapplication.data.model.Courses
+import com.example.myapplication.data.model.id
 import com.example.myapplication.data.repository.CourseRepository
-import com.example.myapplication.ui.components.courseInformation
-import com.example.myapplication.data.repository.StudentRepository
+import com.example.myapplication.data.repository.ScheduleRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +14,9 @@ import kotlinx.coroutines.flow.asStateFlow
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val courseRepository: CourseRepository) : ViewModel() {
+    private val courseRepository: CourseRepository,
+    private val scheduleRepository: ScheduleRepository,
+) : ViewModel() {
     private val allCourses = courseRepository.getAllCourses() // we should get this from the backend
 
     private val _selectedSemester =  MutableStateFlow("Spring 2026")
@@ -29,7 +32,7 @@ class SearchViewModel @Inject constructor(
     val searchingText: StateFlow<String> = _searchingText.asStateFlow()
 
     private val _filteredCourses = MutableStateFlow(allCourses)
-    val filteredCourses: StateFlow<List<courseInformation>> = _filteredCourses.asStateFlow()
+    val filteredCourses: StateFlow<List<Courses>> = _filteredCourses.asStateFlow()
 
     init {
         filterCourses("")   // this is needed to get the default _selectedSemester
@@ -45,35 +48,11 @@ class SearchViewModel @Inject constructor(
         filterCourses(newQuery)
     }
 
-    // tracks added courses. We will use courseIDs (Department + Number)
-    private val _addedCourses = MutableStateFlow<Set<String>>(emptySet())
-    val addedCourses: StateFlow<Set<String>> = _addedCourses.asStateFlow()
-
-    // the list of courses added to the schedule
-    private val _userSchedule = MutableStateFlow<List<courseInformation>>(emptyList())
-    val userSchedule: StateFlow<List<courseInformation>> = _userSchedule.asStateFlow()
+    val addedCourses: StateFlow<Set<String>> = scheduleRepository.addedIds
 
     // adds or deletes a course from the user's data
-    fun addOrDeleteCourse(course: courseInformation) {
-        val currentAdded = _addedCourses.value.toMutableSet()
-        val currentSchedule = _userSchedule.value.toMutableList()
-
-        // department + number (ex: "HIST1530")
-        val courseId = "${course.department}${course.courseNumber}"
-
-        if (currentAdded.contains(courseId)) {
-            // remove course
-            currentAdded.remove(courseId)
-            currentSchedule.removeAll { "${it.department}${it.courseNumber}" == courseId }
-        } else {
-            // add course
-            currentAdded.add(courseId)
-            currentSchedule.add(course)
-        }
-
-        // update + tell UI about it
-        _addedCourses.value = currentAdded
-        _userSchedule.value = currentSchedule
+    fun addOrDeleteCourse(course: Courses) {
+        scheduleRepository.toggleAdded(course.id)
     }
 
     fun dropdownFilter(category: String, option: String) {

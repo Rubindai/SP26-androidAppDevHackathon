@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.myapplication.data.model.id
 import com.example.myapplication.ui.components.FilterDropdown
 import com.example.myapplication.ui.components.SearchCourseCard
 import com.example.myapplication.ui.components.SemesterDropdown
@@ -143,11 +144,9 @@ fun SearchScreen(viewModel: SearchViewModel = viewModel()) { // import viewmodel
 
         LazyColumn() {
             items(filteredCourses) { course ->
-                val courseId = "${course.department}${course.courseNumber}"
-
                 SearchCourseCard(
                     course = course,
-                    isAdded = addedCourses.contains(courseId), // Passes true/false to the card
+                    isAdded = addedCourses.contains(course.id), // Passes true/false to the card
                     onAddClick = { viewModel.addOrDeleteCourse(course) } // Triggers the toggle
                 )
             }

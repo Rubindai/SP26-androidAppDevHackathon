@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
@@ -17,12 +18,9 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -30,12 +28,11 @@ import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.data.model.NavItem
 import com.example.myapplication.data.model.Student
 import com.example.myapplication.ui.screens.OnboardingScreen
-
 import com.example.myapplication.ui.screens.ProfileScreen
 import com.example.myapplication.ui.screens.ProgressScreen
 import com.example.myapplication.ui.screens.RequirementsChecklistScreen
 import com.example.myapplication.ui.screens.Screen
-import com.example.myapplication.ui.screens.Screen.DashboardScreen.toScreen
+import com.example.myapplication.ui.screens.ScheduleScreen
 import com.example.myapplication.ui.screens.SearchScreen
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.example.myapplication.viewmodel.OnboardingRequirementViewModel
@@ -61,10 +58,15 @@ class MainActivity : ComponentActivity() {
                     screen = Screen.SearchScreen,
                 ),
                 NavItem(
+                    label = "Schedule",
+                    icon = Icons.Filled.CalendarMonth,
+                    screen = Screen.ScheduleScreen,
+                ),
+                NavItem(
                     label = "Profile",
                     icon = Icons.Filled.Person,
                     screen = Screen.ProfileScreen(userId = "123"),
-                )
+                ),
             )
 
             MyApplicationTheme {
@@ -74,22 +76,22 @@ class MainActivity : ComponentActivity() {
                 val searchViewModel: SearchViewModel = hiltViewModel()
                 val requirementsViewModel: OnboardingRequirementViewModel = hiltViewModel()
 
-                Scaffold(modifier = Modifier.fillMaxSize(),
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
                     bottomBar = {
                         if (currentRoute != Screen.OnboardingScreen::class.qualifiedName &&
-                            currentRoute != Screen.OnboardingRequirementScreen::class.qualifiedName) { // this
-                            // makes it so the bottom bar will not show up in the onboarding screen
+                            currentRoute != Screen.OnboardingRequirementScreen::class.qualifiedName) {
                             NavigationBar(
                                 containerColor = Color(0xFFF9F7F2)
                             ) {
-                                tabs.map { item ->
+                                tabs.forEach { item ->
                                     NavigationBarItem(
-                                        // before, it didn't recognize Dashboard and ProfileScreen as a screen
-                                        // because they are objects, so this new change makes it work now
-                                        // After you implement the profile screen as an object, it should
-                                        // start displaying the pill background as well
-                                        selected = currentRoute == item.screen::class.qualifiedName,
-                                        onClick = { navController.navigate(item.screen) },
+                                        selected = currentRoute.isSelectedRoute(item.screen),
+                                        onClick = {
+                                            navController.navigate(item.screen) {
+                                                launchSingleTop = true
+                                            }
+                                        },
                                         icon = {
                                             Icon(
                                                 imageVector = item.icon,
@@ -104,7 +106,8 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                         }
-                }) { innerPadding ->
+                    },
+                ) { innerPadding ->
                     Box(modifier = Modifier.padding(innerPadding)) {
                         NavHost(
                             navController = navController,
@@ -114,8 +117,6 @@ class MainActivity : ComponentActivity() {
                                 OnboardingScreen(
                                     onClick = {
                                         navController.navigate(Screen.OnboardingRequirementScreen) {
-                                            // clears the Onboarding screen from the backstack
-                                            // so the user can't "Go Back" to the login page
                                             popUpTo(Screen.OnboardingScreen) { inclusive = true }
                                         }
                                     }
@@ -130,7 +131,6 @@ class MainActivity : ComponentActivity() {
                                     onDone = {
                                         requirementsViewModel.finishOnboarding()
                                         navController.navigate(Screen.DashboardScreen) {
-                                            // Now we clear the checklist from the stack too
                                             popUpTo(Screen.OnboardingRequirementScreen) { inclusive = true }
                                         }
                                     }
@@ -141,6 +141,9 @@ class MainActivity : ComponentActivity() {
                             }
                             composable<Screen.SearchScreen> {
                                 SearchScreen(viewModel = searchViewModel)
+                            }
+                            composable<Screen.ScheduleScreen> {
+                                ScheduleScreen()
                             }
                             composable<Screen.ProfileScreen> {
                                 ProfileScreen()
@@ -154,18 +157,5 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MyApplicationTheme {
-        Greeting("Android")
-    }
-}
+private fun String?.isSelectedRoute(screen: Screen): Boolean =
+    this?.substringBefore("/") == screen::class.qualifiedName

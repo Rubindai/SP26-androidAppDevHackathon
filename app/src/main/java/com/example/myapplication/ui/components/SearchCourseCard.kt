@@ -26,25 +26,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.myapplication.data.model.Courses
 import com.example.myapplication.ui.theme.Fraunces
-
-data class courseInformation(
-    val name: String,
-    val department: String,
-    val courseNumber: String,
-    val credits: Int,
-    val description: String,
-    val prerequisites: List<String>,
-    val corequisites: List<String>,
-    val distributions: List<String>,
-    val year: Int,
-    val semester: String,
-    val instructor: String,
-    val days: String,
-    val time: String,
-    val location: String,
-    val open: Boolean
-)
 
 @Composable
 fun AddCourseButton(
@@ -94,7 +77,7 @@ fun AddCourseButton(
 
 @Composable
 fun SearchCourseCard(
-    course: courseInformation,
+    course: Courses,
     isAdded: Boolean,
     onAddClick: () -> Unit
 ) {

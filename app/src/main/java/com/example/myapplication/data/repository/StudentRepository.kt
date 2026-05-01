@@ -1,6 +1,5 @@
 package com.example.myapplication.data.repository
 
-import com.example.myapplication.ui.components.courseInformation
 import com.example.myapplication.data.model.Requirement
 import com.example.myapplication.data.model.Student
 import com.example.myapplication.data.remote.CourseApi
