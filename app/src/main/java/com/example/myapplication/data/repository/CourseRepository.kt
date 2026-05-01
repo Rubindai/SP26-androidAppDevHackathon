@@ -19,6 +19,10 @@ class CourseRepository @Inject constructor(
         api.listCourses(semester = semester).also { _courses.value = it }
     }
 
+    suspend fun search(semester: String? = null, query: String): Result<List<Courses>> = runCatching {
+        api.listCourses(semester = semester, search = query)
+    }
+
     suspend fun listSemesters(): Result<List<String>> = runCatching {
         api.listSemesters().semesters
     }

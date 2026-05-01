@@ -4,16 +4,16 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.model.Courses
+import com.example.myapplication.data.model.code
 import com.example.myapplication.data.model.days
 import com.example.myapplication.data.model.instructor
-import com.example.myapplication.data.model.semester
 import com.example.myapplication.data.model.time
-import com.example.myapplication.data.model.year
 import com.example.myapplication.data.repository.CourseRepository
 import com.example.myapplication.data.repository.ScheduleRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -51,6 +51,8 @@ class SearchViewModel @Inject constructor(
     private val _semesters = MutableStateFlow<List<String>>(listOf("Fall 2026"))
     val semesters: StateFlow<List<String>> = _semesters.asStateFlow()
 
+    private var loadJob: Job? = null
+
     init {
         loadCourses()
         loadSemesters()
@@ -70,21 +72,26 @@ class SearchViewModel @Inject constructor(
     fun refresh() = loadCourses()
 
     private fun loadCourses() {
+        loadJob?.cancel()
+        val query = _searchingText.value.trim()
+        val semester = backendSemester(_selectedSemester.value)
+
         _uiState.value = SearchUiState.Loading
-        viewModelScope.launch {
-            var lastError: Throwable? = null
-            repeat(COURSE_LOAD_ATTEMPTS) { attempt ->
-                val result = scheduleRepository.suggestions(limit = SUGGESTION_LIMIT)
-                if (result.isSuccess) {
-                    val courses = result.getOrThrow()
+        loadJob = viewModelScope.launch {
+            val result = if (query.isBlank()) {
+                loadSuggestedCourses()
+            } else {
+                courseRepository.search(semester = semester, query = query)
+            }
+
+            result
+                .onSuccess { courses ->
                     _uiState.value = SearchUiState.Success(courses)
                     filterCourses(_searchingText.value)
-                    return@launch
                 }
-                lastError = result.exceptionOrNull()
-                if (attempt < COURSE_LOAD_ATTEMPTS - 1) delay(COURSE_LOAD_RETRY_DELAY_MS)
-            }
-            _uiState.value = SearchUiState.Error(lastError?.message ?: "Failed to load courses")
+                .onFailure { error ->
+                    _uiState.value = SearchUiState.Error(error.message ?: "Failed to load courses")
+                }
         }
     }
 
@@ -95,7 +102,7 @@ class SearchViewModel @Inject constructor(
 
     fun onSearchQueryChanged(newQuery: String) {
         _searchingText.value = newQuery
-        filterCourses(newQuery)
+        loadCourses()
     }
 
     fun addOrDeleteCourse(course: Courses) {
@@ -117,11 +124,14 @@ class SearchViewModel @Inject constructor(
         val filters = _selectedFilters.value
 
         _filteredCourses.value = source.filter { course ->
-            val matchesSearch = searchBarText.isEmpty() ||
-                course.name.contains(searchBarText, ignoreCase = true) ||
-                course.department.contains(searchBarText, ignoreCase = true) ||
-                course.courseNumber.contains(searchBarText, ignoreCase = true) ||
-                course.instructor.contains(searchBarText, ignoreCase = true)
+            val query = searchBarText.trim()
+            val matchesSearch = query.isBlank() ||
+                course.courseId.contains(query, ignoreCase = true) ||
+                course.code.contains(query, ignoreCase = true) ||
+                course.name.contains(query, ignoreCase = true) ||
+                course.department.contains(query, ignoreCase = true) ||
+                course.courseNumber.contains(query, ignoreCase = true) ||
+                course.instructor.contains(query, ignoreCase = true)
 
 //            val matchesDist = filters["Distributions"]?.let { course.distributions.contains(it) } ?: true
             val matchesCredits = filters["Credits"]?.let { course.credits.toString() == it } ?: true
@@ -153,6 +163,17 @@ class SearchViewModel @Inject constructor(
             matchesSearch && matchesCredits && matchesSubject &&
                 matchesLevels && matchesDays && matchesTime
         }
+    }
+
+    private suspend fun loadSuggestedCourses(): Result<List<Courses>> {
+        var lastError: Throwable? = null
+        repeat(COURSE_LOAD_ATTEMPTS) { attempt ->
+            val result = scheduleRepository.suggestions(limit = SUGGESTION_LIMIT)
+            if (result.isSuccess) return result
+            lastError = result.exceptionOrNull()
+            if (attempt < COURSE_LOAD_ATTEMPTS - 1) delay(COURSE_LOAD_RETRY_DELAY_MS)
+        }
+        return Result.failure(lastError ?: IllegalStateException("Failed to load courses"))
     }
 
     // "Fall 2026" -> "FA26", "Spring 2026" -> "SP26"
