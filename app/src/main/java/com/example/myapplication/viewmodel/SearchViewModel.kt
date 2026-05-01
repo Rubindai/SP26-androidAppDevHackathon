@@ -1,6 +1,7 @@
 package com.example.myapplication.viewmodel
 
 import androidx.lifecycle.ViewModel
+import com.example.myapplication.data.repository.CourseRepository
 import com.example.myapplication.ui.components.courseInformation
 import com.example.myapplication.data.repository.StudentRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,9 +13,8 @@ import kotlinx.coroutines.flow.asStateFlow
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val studentRepository: StudentRepository
-) : ViewModel() {
-    private val allCourses = studentRepository.getAllCourses() // we should get this from the backend
+    private val courseRepository: CourseRepository) : ViewModel() {
+    private val allCourses = courseRepository.getAllCourses() // we should get this from the backend
 
     private val _selectedSemester =  MutableStateFlow("Spring 2026")
     val selectedSemester: StateFlow<String> = _selectedSemester.asStateFlow()
