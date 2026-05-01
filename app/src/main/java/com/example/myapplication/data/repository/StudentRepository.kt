@@ -31,8 +31,4 @@ class StudentRepository @Inject constructor(
     fun requirements(): List<Requirement> = RequirementSource.requirements
     fun completedCredits(): Int = StudentApi.completedCredits
     fun targetTotalCredits(): Int = StudentApi.targetTotalCredits
-
-    fun getAllCourses(): List<courseInformation> {
-        return CourseApi.mockCourses
-    }
 }
