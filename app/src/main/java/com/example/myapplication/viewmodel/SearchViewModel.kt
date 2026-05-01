@@ -1,7 +1,7 @@
 package com.example.myapplication.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.example.myapplication.components.courseInformation
+import com.example.myapplication.ui.components.courseInformation
 import com.example.myapplication.data.repository.StudentRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject

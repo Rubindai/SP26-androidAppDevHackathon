@@ -27,9 +27,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.myapplication.components.ProgressCircle
-import com.example.myapplication.components.RequirementCard
-import com.example.myapplication.components.StatInline
+import com.example.myapplication.ui.components.ProgressCircle
+import com.example.myapplication.ui.components.RequirementCard
+import com.example.myapplication.ui.components.StatInline
 import com.example.myapplication.data.model.ProgressStatus
 import com.example.myapplication.data.remote.RequirementSource
 import com.example.myapplication.ui.theme.Fraunces

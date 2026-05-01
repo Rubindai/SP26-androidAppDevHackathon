@@ -1,6 +1,6 @@
 package com.example.myapplication.data.remote
 
-import com.example.myapplication.components.courseInformation
+import com.example.myapplication.ui.components.courseInformation
 
 object CourseApi {
     val mockCourses = listOf(

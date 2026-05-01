@@ -1,4 +1,4 @@
-package com.example.myapplication.components
+package com.example.myapplication.ui.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background

@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.myapplication.components.RequirementCheckItem
+import com.example.myapplication.ui.components.RequirementCheckItem
 import com.example.myapplication.data.model.Student
 import com.example.myapplication.ui.theme.Fraunces
 

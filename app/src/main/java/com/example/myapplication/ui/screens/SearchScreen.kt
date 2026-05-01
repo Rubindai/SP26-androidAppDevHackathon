@@ -2,10 +2,8 @@ package com.example.myapplication.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -30,9 +28,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.myapplication.components.FilterDropdown
-import com.example.myapplication.components.SearchCourseCard
-import com.example.myapplication.components.SemesterDropdown
+import com.example.myapplication.ui.components.FilterDropdown
+import com.example.myapplication.ui.components.SearchCourseCard
+import com.example.myapplication.ui.components.SemesterDropdown
 import com.example.myapplication.ui.theme.Fraunces
 import com.example.myapplication.viewmodel.SearchViewModel
 
