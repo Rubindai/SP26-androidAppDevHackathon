@@ -8,7 +8,9 @@ import com.example.myapplication.data.model.Courses
 import com.example.myapplication.data.model.Day
 import com.example.myapplication.data.model.EventType
 import com.example.myapplication.data.model.code
-import com.example.myapplication.data.model.id
+import com.example.myapplication.data.model.days
+import com.example.myapplication.data.model.location
+import com.example.myapplication.data.model.time
 import com.example.myapplication.data.repository.CourseRepository
 import com.example.myapplication.data.repository.ScheduleRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,7 +30,18 @@ class ScheduleViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            combine(scheduleRepository.addedIds, scheduleRepository.blocks) { addedIds, blocks ->
+            // Load planned offerings + the course catalog needed to render them.
+            // Both calls are best-effort; if either fails the UI just shows what it has.
+            scheduleRepository.loadFromBackend()
+            courseRepository.refresh(semester = "FA26")
+        }
+        viewModelScope.launch {
+            // Re-derive whenever any of the three flows change (added, blocks, or course catalog).
+            combine(
+                scheduleRepository.addedIds,
+                scheduleRepository.blocks,
+                courseRepository.courses,
+            ) { addedIds, blocks, _ ->
                 buildUiState(addedIds, blocks)
             }.collect { state ->
                 _uiState.value = state
@@ -50,8 +63,10 @@ class ScheduleViewModel @Inject constructor(
         val isOverCreditLoad: Boolean get() = totalCredits > 17
     }
 
-    fun removeCourse(id: String) {
-        scheduleRepository.toggleAdded(id)
+    fun removeCourse(courseId: String) {
+        viewModelScope.launch {
+            scheduleRepository.remove(courseId)
+        }
     }
 
     fun upsertBlock(block: Block) {
@@ -92,7 +107,7 @@ private fun Courses.toCalendarEvents(): List<CalendarEvent> {
     val timeRange = parseTimeRange(time) ?: return emptyList()
     return parseDays(days).map { day ->
         CalendarEvent(
-            id = "course:$id:${day.code}",
+            id = "course:$courseId:${day.code}",
             day = day,
             startHour = timeRange.first,
             endHour = timeRange.second,

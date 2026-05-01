@@ -2,10 +2,13 @@ package com.example.myapplication.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -13,7 +16,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -27,22 +32,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.myapplication.data.model.id
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.myapplication.ui.components.FilterDropdown
 import com.example.myapplication.ui.components.SearchCourseCard
-import com.example.myapplication.ui.components.SemesterDropdown
 import com.example.myapplication.ui.theme.Fraunces
+import com.example.myapplication.viewmodel.SearchUiState
 import com.example.myapplication.viewmodel.SearchViewModel
 
 
 @Composable
-fun SearchScreen(viewModel: SearchViewModel = viewModel()) { // import viewmodel in
+fun SearchScreen(viewModel: SearchViewModel = hiltViewModel()) {
 
     val searchBarText by viewModel.searchingText.collectAsState() // what is being typed into it
     val filteredCourses by viewModel.filteredCourses.collectAsState() // filtered courses
     val selectedFilters by viewModel.selectedFilters.collectAsState() // get dropdown filters
     val addedCourses by viewModel.addedCourses.collectAsState() // get added courses
+    val uiState by viewModel.uiState.collectAsState()
 
 
     Column(
@@ -60,14 +65,11 @@ fun SearchScreen(viewModel: SearchViewModel = viewModel()) { // import viewmodel
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "Find courses",
+                text = "Suggested courses",
                 fontFamily = Fraunces,
                 fontWeight = FontWeight(600),
                 fontSize = 28.sp,
             )
-
-            SemesterDropdown(viewModel)
-
         }
 
 
@@ -75,7 +77,7 @@ fun SearchScreen(viewModel: SearchViewModel = viewModel()) { // import viewmodel
         OutlinedTextField(
             value = searchBarText,
             onValueChange = { viewModel.onSearchQueryChanged(it) },
-            placeholder = { Text("Search courses, depts, professors...") },
+            placeholder = { Text("Search suggested courses...") },
             leadingIcon = {
                 Icon(Icons.Default.Search, contentDescription = null)
             },
@@ -142,16 +144,44 @@ fun SearchScreen(viewModel: SearchViewModel = viewModel()) { // import viewmodel
             }
         }
 
-        LazyColumn() {
-            items(filteredCourses) { course ->
-                SearchCourseCard(
-                    course = course,
-                    isAdded = addedCourses.contains(course.id), // Passes true/false to the card
-                    onAddClick = { viewModel.addOrDeleteCourse(course) } // Triggers the toggle
-                )
+        when (val state = uiState) {
+            is SearchUiState.Loading -> {
+                Box(
+                    modifier = Modifier.fillMaxSize().padding(top = 32.dp),
+                    contentAlignment = Alignment.TopCenter
+                ) {
+                    CircularProgressIndicator(color = Color(0xFF8B1818))
+                }
+            }
+            is SearchUiState.Error -> {
+                Column(
+                    modifier = Modifier.fillMaxWidth().padding(top = 32.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Couldn't load courses",
+                        fontFamily = Fraunces,
+                        fontWeight = FontWeight(600),
+                        fontSize = 18.sp,
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    Text(state.message, color = Color.DarkGray, fontSize = 13.sp)
+                    Spacer(Modifier.height(12.dp))
+                    OutlinedButton(onClick = { viewModel.refresh() }) { Text("Retry") }
+                }
+            }
+            is SearchUiState.Success -> {
+                LazyColumn {
+                    items(filteredCourses) { course ->
+                        SearchCourseCard(
+                            course = course,
+                            isAdded = addedCourses.contains(course.courseId),
+                            onAddClick = { viewModel.addOrDeleteCourse(course) }
+                        )
+                    }
+                }
             }
         }
-
     }
 }
 

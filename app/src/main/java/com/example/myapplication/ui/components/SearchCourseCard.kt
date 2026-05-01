@@ -27,6 +27,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.data.model.Courses
+import com.example.myapplication.data.model.days
+import com.example.myapplication.data.model.instructor
+import com.example.myapplication.data.model.time
 import com.example.myapplication.ui.theme.Fraunces
 
 @Composable
@@ -35,9 +38,9 @@ fun AddCourseButton(
     onClick: () -> Unit
 ) {
 
-    var color = Color(0xFFD1E7DD)
+    var color = Color(0xFF2E7D45)
     if (isAdded) {
-        color = Color(0xFFD1E7DD) // green
+        color = Color(0xFF2E7D45) // green
     } else {
         color = Color(0xFF8B1818) // red
     }
@@ -137,9 +140,12 @@ fun SearchCourseCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "${course.department} ${course.courseNumber} | ${course.credits} cr",
+                        text = listOfNotNull(
+                            "${course.department} ${course.courseNumber}".trim(),
+                            course.credits.takeIf { it > 0 }?.let { "$it cr" },
+                        ).joinToString(" | "),
                         fontFamily = FontFamily.Monospace,
-                        color = Color.Gray,
+                        color = Color(0xFF4E473F),
                         fontWeight = FontWeight(600),
                         fontSize = 12.sp
                     )

@@ -62,8 +62,6 @@ import com.example.myapplication.data.model.Courses
 import com.example.myapplication.data.model.Day
 import com.example.myapplication.data.model.EventType
 import com.example.myapplication.data.model.code
-import com.example.myapplication.data.model.id
-import com.example.myapplication.data.remote.CourseApi
 import com.example.myapplication.ui.components.WeekCalendar
 import com.example.myapplication.ui.theme.Fraunces
 import com.example.myapplication.ui.theme.MyApplicationTheme
@@ -143,11 +141,11 @@ fun ScheduleContent(
             if (state.addedCourses.isEmpty()) {
                 item { EmptyCourseList() }
             } else {
-                items(state.addedCourses, key = { it.id }) { course ->
+                items(state.addedCourses, key = { it.courseId }) { course ->
                     CourseRow(
                         course = course,
-                        onClick = { onCourseRowClick(course.id) },
-                        onRemove = { onCourseRemove(course.id) },
+                        onClick = { onCourseRowClick(course.courseId) },
+                        onRemove = { onCourseRemove(course.courseId) },
                         modifier = Modifier.padding(horizontal = 20.dp, vertical = 4.dp),
                     )
                 }
@@ -550,7 +548,7 @@ private fun snapToHalfHour(value: Float): Float =
     (value * 2f).toInt() / 2f
 
 private fun buildSampleScheduleState(): ScheduleUiState {
-    val courses = CourseApi.mockCourses.filter { it.year == 2026 }.take(3)
+    val courses = emptyList<Courses>()
     val blocks = listOf(
         Block("seed-0", Day.MON, 16f, 18f, "Club: Cornell Outing", BlockCategory.CLUB),
         Block("seed-1", Day.WED, 16f, 18f, "Club: Cornell Outing", BlockCategory.CLUB),

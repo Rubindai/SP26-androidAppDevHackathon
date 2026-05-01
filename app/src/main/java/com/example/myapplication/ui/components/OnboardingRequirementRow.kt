@@ -35,7 +35,7 @@ fun RequirementCheckItem(
         modifier = Modifier
             .fillMaxWidth()
             .border(
-                BorderStroke(1.dp, Color.Gray),
+                BorderStroke(1.dp, Color(0xFF9B9284)),
                 shape = RoundedCornerShape(10.dp)
             )
             .background(if (isChecked) Color(0xFFFDF7F7) else Color.White)
@@ -46,7 +46,7 @@ fun RequirementCheckItem(
         Icon(
             imageVector = if (isChecked) Icons.Default.CheckCircle else Icons.Default.RadioButtonUnchecked,
             contentDescription = null,
-            tint = if (isChecked) Color(0xFF8B1818) else Color.Gray,
+            tint = if (isChecked) Color(0xFF8B1818) else Color(0xFF6C665C),
             modifier = Modifier.size(24.dp)
         )
 

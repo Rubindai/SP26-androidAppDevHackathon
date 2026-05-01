@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -41,11 +43,14 @@ fun ProgressScreen(
     viewModel: ProgressViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    ProgressContent(state = uiState)
+    ProgressContent(state = uiState, onRetry = { viewModel.refresh() })
 }
 
 @Composable
-fun ProgressContent(state: ProgressViewModel.ProgressUiState) {
+fun ProgressContent(
+    state: ProgressViewModel.ProgressUiState,
+    onRetry: () -> Unit = {},
+) {
 
     Column(
         modifier = Modifier
@@ -111,7 +116,7 @@ fun ProgressContent(state: ProgressViewModel.ProgressUiState) {
                     Row(horizontalArrangement = Arrangement.spacedBy(14.dp)) {
                         StatInline(state.complete, "Done", Color(0xFF2E7D45))
                         StatInline(state.inProgress, "Active", Color(0xFF1F5A88))
-                        StatInline(state.left, "Left", Color(0xFFC9C4B9))
+                        StatInline(state.left, "Left", Color(0xFF6C665C))
                     }
 
                 }
@@ -126,10 +131,57 @@ fun ProgressContent(state: ProgressViewModel.ProgressUiState) {
         }
 
 
-        LazyColumn() {
-            items(state.requirements) { req ->
-                RequirementCard(req)
-                Spacer(modifier = Modifier.size(16.dp))
+        when {
+            state.isLoading -> {
+                Box(
+                    modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
+                    contentAlignment = Alignment.Center
+                ) { CircularProgressIndicator(color = Color(0xFF8B1818)) }
+            }
+            state.error != null -> {
+                Column(
+                    modifier = Modifier.fillMaxWidth().padding(top = 24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Couldn't load progress",
+                        fontFamily = Fraunces,
+                        fontWeight = FontWeight(600),
+                        fontSize = 18.sp,
+                    )
+                    Spacer(Modifier.size(4.dp))
+                    Text(state.error, color = Color.DarkGray, fontSize = 13.sp)
+                    Spacer(Modifier.size(12.dp))
+                    OutlinedButton(onClick = onRetry) { Text("Retry") }
+                }
+            }
+            state.requirements.isEmpty() -> {
+                Column(
+                    modifier = Modifier.fillMaxWidth().padding(top = 24.dp, start = 16.dp, end = 16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "No requirements found",
+                        fontFamily = Fraunces,
+                        fontWeight = FontWeight(600),
+                        fontSize = 20.sp,
+                    )
+                    Spacer(Modifier.size(8.dp))
+                    Text(
+                        text = "The backend has no requirement rules defined for major " +
+                            "\"${state.major}\" yet. Try signing in as a CS major to see this screen populated.",
+                        color = Color.DarkGray,
+                        fontSize = 14.sp,
+                    )
+                }
+            }
+            else -> {
+                LazyColumn {
+                    items(state.requirements) { req ->
+                        RequirementCard(req)
+                        Spacer(modifier = Modifier.size(16.dp))
+                    }
+                }
             }
         }
     }

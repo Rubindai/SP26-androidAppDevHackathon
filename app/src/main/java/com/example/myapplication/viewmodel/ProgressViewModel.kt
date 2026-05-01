@@ -1,86 +1,91 @@
 package com.example.myapplication.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.model.ProgressStatus
 import com.example.myapplication.data.model.Requirement
 import com.example.myapplication.data.repository.StudentRepository
+import com.example.myapplication.data.repository.toRequirements
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
-data class ProgressUiState(
-    val major: String,
-    val requirements: List<Requirement>,
-    val percent: Float,
-    val complete: Int,
-    val inProgress: Int,
-    val left: Int,
-    val targetTerm: String,
-    val onPaceTerm: String,
-    val completedCredits: Int,
-    val totalCreditsTarget: Int,
-)
-
-@OptIn(FlowPreview::class)
 @HiltViewModel
 class ProgressViewModel @Inject constructor(
-    private val studentRepository: StudentRepository
+    private val studentRepository: StudentRepository,
 ) : ViewModel() {
 
-    //    private val _uiState = MutableStateFlow(ProgressUiState(
-//
-//    ))
-    private val _uiState = MutableStateFlow(
-        ProgressUiState(
-            major = studentRepository.student().major,
-            requirements = studentRepository.requirements(),
-            percent = 0f,
-            complete = 0,
-            inProgress = 0,
-            left = 0,
-            targetTerm = studentRepository.student().targetTerm,
-            onPaceTerm = "Spring 2028",
-            completedCredits = studentRepository.completedCredits(),
-            totalCreditsTarget = studentRepository.targetTotalCredits(),
-        ),
-    )
+    data class ProgressUiState(
+        val major: String = "",
+        val requirements: List<Requirement> = emptyList(),
+        val percent: Float = 0f,
+        val complete: Int = 0,
+        val inProgress: Int = 0,
+        val left: Int = 0,
+        val targetTerm: String = "",
+        val onPaceTerm: String = "",
+        val completedCredits: Int = 0,
+        val totalCreditsTarget: Int = 0,
+        val isLoading: Boolean = true,
+        val error: String? = null,
+    ) {
+        val percentLabel: Int get() = (percent * 100).toInt()
+    }
+
+    private val _uiState = MutableStateFlow(ProgressUiState())
     val uiState = _uiState.asStateFlow()
 
-    data class ProgressUiState(
-        val major: String,
-        val requirements: List<Requirement>,
-        val percent: Float,
-        val complete: Int,
-        val inProgress: Int,
-        val left: Int,
-        val targetTerm: String,
-        val onPaceTerm: String,
-        val completedCredits: Int,
-        val totalCreditsTarget: Int,
-    ) {
-        /** Progress shown as 0–100 for the ring's center label. */
-        val percentLabel: Int
-            get() = (percent * 100).toInt()
-    }
-
     init {
-        // Compute the progress counts from the requirement list and patch them in.
-        val items = _uiState.value.requirements.flatMap { it.items }
-        val complete = items.count { it.status == ProgressStatus.COMPLETE }
-        val inProgress = items.count { it.status == ProgressStatus.IN_PROGRESS }
-        val percent = if (items.isEmpty()) 0f else (complete + inProgress * 0.5f) / items.size
+        // Mirror the live user profile into the header fields the moment it changes.
+        viewModelScope.launch {
+            studentRepository.currentStudent.collect { student ->
+                _uiState.value = _uiState.value.copy(
+                    major = student.major.ifBlank { "Undeclared" },
+                    targetTerm = student.targetTerm.ifBlank { "—" },
+                    // Rough estimate: backend doesn't sum credits for us, so we approximate
+                    // 3 credits per completed course. Replace once you have a credits-by-course
+                    // index in the client (CourseRepository.courses cache covers FA26).
+                    completedCredits = student.completed.size * 3,
+                    totalCreditsTarget = student.targetCreditsHigh.takeIf { it > 0 } ?: 120,
+                )
+            }
+        }
 
-        _uiState.value = _uiState.value.copy(
-            percent = percent,
-            complete = complete,
-            inProgress = inProgress,
-            left = items.size - complete - inProgress,
-        )
+        // Also refresh from server in case we landed here from a relaunch (mock seed in
+        // _currentStudent until then). Best-effort.
+        viewModelScope.launch { studentRepository.refreshCurrentUser() }
+
+        refresh()
     }
 
+    fun refresh() {
+        _uiState.value = _uiState.value.copy(isLoading = true, error = null)
+        viewModelScope.launch {
+            studentRepository.fetchProgress()
+                .onSuccess { response ->
+                    val reqs = response.toRequirements()
+                    val items = reqs.flatMap { it.items }
+                    val complete = items.count { it.status == ProgressStatus.COMPLETE }
+                    val inProgress = items.count { it.status == ProgressStatus.IN_PROGRESS }
+                    val percent = if (items.isEmpty()) 0f else (complete + inProgress * 0.5f) / items.size
+                    _uiState.value = _uiState.value.copy(
+                        requirements = reqs,
+                        percent = percent,
+                        complete = complete,
+                        inProgress = inProgress,
+                        left = items.size - complete - inProgress,
+                        isLoading = false,
+                        error = null,
+                    )
+                }
+                .onFailure { e ->
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        error = e.message ?: "Failed to load progress",
+                    )
+                }
+        }
+    }
 }
-
-

@@ -1,6 +1,8 @@
 package com.example.myapplication.di
 
-import com.example.myapplication.data.remote.StudentApi
+import com.example.myapplication.data.remote.CoursesApi
+import com.example.myapplication.data.remote.SchedulesApi
+import com.example.myapplication.data.remote.UsersApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -41,15 +43,26 @@ object NetworkModule {
         }
         return Retrofit.Builder()
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
-            .baseUrl("https://dummyjson.com/")
+            .baseUrl("https://hack-challenge-backend-245198841280.europe-west1.run.app/")
             .client(okHttpClient)
             .build()
     }
 
     @Provides
     @Singleton
-    fun provideRecipesApiService(retrofit: Retrofit): StudentApi{
-        return retrofit.create(StudentApi::class.java)
+    fun provideCoursesApi(retrofit: Retrofit): CoursesApi {
+        return retrofit.create(CoursesApi::class.java)
     }
 
+    @Provides
+    @Singleton
+    fun provideUsersApi(retrofit: Retrofit): UsersApi {
+        return retrofit.create(UsersApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSchedulesApi(retrofit: Retrofit): SchedulesApi {
+        return retrofit.create(SchedulesApi::class.java)
+    }
 }

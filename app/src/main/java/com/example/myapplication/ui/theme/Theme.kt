@@ -8,18 +8,42 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = AppRed,
+    secondary = AppInfo,
+    tertiary = AppWarning,
+    background = AppCream,
+    surface = AppSurface,
+    surfaceVariant = AppSurfaceSelected,
+    onPrimary = AppSurface,
+    onSecondary = AppSurface,
+    onTertiary = AppSurface,
+    onBackground = AppInk,
+    onSurface = AppInk,
+    onSurfaceVariant = AppMuted,
+    outline = AppBorderStrong,
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+    primary = AppRed,
+    primaryContainer = AppSurfaceSelected,
+    secondary = AppInfo,
+    secondaryContainer = Color(0xFFE0ECF5),
+    tertiary = AppWarning,
+    tertiaryContainer = Color(0xFFFAECD0),
+    background = AppCream,
+    surface = AppSurface,
+    surfaceVariant = AppSurfaceSelected,
+    onPrimary = AppSurface,
+    onSecondary = AppSurface,
+    onTertiary = AppSurface,
+    onBackground = AppInk,
+    onSurface = AppInk,
+    onSurfaceVariant = AppMuted,
+    outline = AppBorderStrong,
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -36,7 +60,7 @@ private val LightColorScheme = lightColorScheme(
 fun MyApplicationTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -45,7 +69,7 @@ fun MyApplicationTheme(
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
 
-        darkTheme -> DarkColorScheme
+        darkTheme -> LightColorScheme
         else -> LightColorScheme
     }
 

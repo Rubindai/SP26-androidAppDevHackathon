@@ -24,7 +24,7 @@ import com.example.myapplication.viewmodel.SearchViewModel
 @Composable
 fun SemesterDropdown(viewModel: SearchViewModel) {
     val selectedSemester by viewModel.selectedSemester.collectAsState()
-    val semesters = viewModel.getAllSemesters()
+    val semesters by viewModel.semesters.collectAsState()
     var expanded by remember { mutableStateOf(false) }
 
     Box {

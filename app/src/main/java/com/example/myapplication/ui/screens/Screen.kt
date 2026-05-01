@@ -8,8 +8,13 @@ import kotlinx.serialization.Serializable
 sealed class Screen {
     @Serializable
     data object OnboardingScreen : Screen()
+
     @Serializable
-    data object OnboardingRequirementScreen : Screen()
+    data object MajorSelectionScreen : Screen()
+
+    @Serializable
+    data object CompletedCoursesScreen : Screen()
+
     @Serializable
     data object DashboardScreen : Screen()
 
@@ -19,15 +24,11 @@ sealed class Screen {
     @Serializable
     data object ScheduleScreen : Screen()
 
-    @Serializable
-    data class ProfileScreen(val userId: String) : Screen()
-
     fun NavBackStackEntry.toScreen(): Screen? =
         when (destination.route?.substringAfterLast(".")?.substringBefore("/")) {
             "DashboardScreen" -> toRoute<DashboardScreen>()
             "SearchScreen" -> toRoute<SearchScreen>()
             "ScheduleScreen" -> toRoute<ScheduleScreen>()
-            "ProfileScreen" -> toRoute<ProfileScreen>()
             else -> null
         }
 }
