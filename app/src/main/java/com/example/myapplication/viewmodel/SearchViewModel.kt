@@ -123,7 +123,7 @@ class SearchViewModel @Inject constructor(
                 course.courseNumber.contains(searchBarText, ignoreCase = true) ||
                 course.instructor.contains(searchBarText, ignoreCase = true)
 
-            val matchesDist = filters["Distributions"]?.let { course.distributions.contains(it) } ?: true
+//            val matchesDist = filters["Distributions"]?.let { course.distributions.contains(it) } ?: true
             val matchesCredits = filters["Credits"]?.let { course.credits.toString() == it } ?: true
             val matchesSubject = filters["Subject"]?.let { course.department == it } ?: true
 
@@ -150,7 +150,7 @@ class SearchViewModel @Inject constructor(
                 else -> true
             }
 
-            matchesSearch && matchesDist && matchesCredits && matchesSubject &&
+            matchesSearch && matchesCredits && matchesSubject &&
                 matchesLevels && matchesDays && matchesTime
         }
     }

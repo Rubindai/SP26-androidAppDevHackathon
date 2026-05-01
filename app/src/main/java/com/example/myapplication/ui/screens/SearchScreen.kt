@@ -94,14 +94,14 @@ fun SearchScreen(viewModel: SearchViewModel = hiltViewModel()) {
         )
 
         LazyRow(modifier = Modifier.padding(vertical = 8.dp)) {
-            item {
-                FilterDropdown(
-                    label = "Distributions",
-                    options = listOf("ALC-AS", "SBA-AS", "HA-AS"),
-                    selectedOption = selectedFilters["Distributions"], // current selection
-                    onOptionSelected = { viewModel.dropdownFilter("Distributions", it) }
-                )
-            }
+//            item {
+//                FilterDropdown(
+//                    label = "Distributions",
+//                    options = listOf("ALC-AS", "SBA-AS", "HA-AS"),
+//                    selectedOption = selectedFilters["Distributions"], // current selection
+//                    onOptionSelected = { viewModel.dropdownFilter("Distributions", it) }
+//                )
+//            }
             item {
                 FilterDropdown(
                     label = "Subject",
