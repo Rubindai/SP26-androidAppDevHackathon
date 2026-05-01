@@ -15,6 +15,9 @@ Backend: https://github.com/RyanCheung555/hack-challenge-backend
 
 <img width="383" height="852" alt="image" src="https://github.com/user-attachments/assets/097a66ee-9998-4b44-9a60-8dff6d3e8e95" />
 
+<img width="379" height="847" alt="image" src="https://github.com/user-attachments/assets/e274f9d5-fe8d-42e1-9579-aba576f4f29f" />
+
+
 <img width="382" height="851" alt="image" src="https://github.com/user-attachments/assets/d97c7499-d6d9-4bc6-8f44-5fc08c998450" />
 
 <img width="386" height="851" alt="image" src="https://github.com/user-attachments/assets/8862b0d8-0059-4945-bd13-72be261ccad4" />
